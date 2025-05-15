@@ -1,0 +1,3 @@
+documento; clave; antiguedad; puntuacion; alojamientos
+1001651755; 2345; 3; 4.2; Al1
+39187650; 8976; 6; 4.0; Al2, Al3
