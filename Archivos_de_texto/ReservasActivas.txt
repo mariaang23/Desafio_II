@@ -1,0 +1,5 @@
+codigoReserva; codigoAloj; documentoHuesped; fechaEntrada; cantNoches; metodoPago; fechaPago; monto
+R3; Al1; 1001470812; 23/05/2025; 4; PSE; 22/05/2025; 200000
+R4; Al2; 1001470812; 29/12/2025; 3; PSE; 29/12/2025; 90000
+R5; Al1; 71116826; 08/08/2025; 5; TCredito; 05/08/2025; 250000
+R6; Al3; 87234564; 10/10/2025; 3; Efectivo; 09/10/2025; 300000
