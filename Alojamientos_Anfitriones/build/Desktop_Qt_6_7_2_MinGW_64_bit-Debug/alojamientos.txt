@@ -1,0 +1,11 @@
+A0001;Campestre;Antioquia;Bello;Casa;Calle 10 #23-45;120000;Piscina,Parquadero;
+A0002;Senderos;Antioquia;Medellin;Casa;Calle 10 #23-45;120000;Piscina,Parquadero;
+A0003;Villa;Antioquia;Caldas;Casa;Calle 10 #23-45;120000;Piscina,Parquadero;
+A0004;Manrique;Antioquia;Itagui;Casa;Calle 10 #23-45;120000;Piscina,Parquadero;
+A0005;Romero;Antioquia;Bello;Casa;Calle 10 #23-45;120000;Piscina,Parquadero;
+A0006;Palmas;Antioquia;Envigado;Casa;Calle 10 #23-45;120000;Piscina,Parquadero;
+A0007;Coral;Antioquia;Medellin;Casa;Calle 10 #23-45;120000;Piscina,Parquadero;
+A0008;Paraiso;Antioquia;Bello;Casa;Calle 10 #23-45;120000;Piscina,Parquadero;
+A0009;Caminos;Antioquia;Sabaneta;Casa;Calle 10 #23-45;120000;Piscina,Parquadero;
+A0010;Parques;Antioquia;Bello;Casa;Calle 10 #23-45;120000;Piscina,Parquadero;
+
