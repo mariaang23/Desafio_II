@@ -1,0 +1,26 @@
+# Archivos generados por Qt Creator
+*.autosave
+*.pro.user
+*.user
+*.qbs.user
+*.pro.user.*
+*.qmlproject.user
+
+# Archivos de compilación
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.lib
+
+# Carpetas de compilación
+build*/
+debug/
+release/
+
+# Archivos temporales
+*.log
+*.tmp
+*.cache
