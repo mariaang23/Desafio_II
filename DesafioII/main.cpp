@@ -28,8 +28,6 @@ int main()
     Reservas::cargarReservas(reservaciones, totReservas);
     Huesped::cargarHuespedes(huespedes, totHuespedes);
 
-
-    cout << "Termino"<<endl;
     //Asociar las reservas a los huespedes
     for (int i = 0; i < totHuespedes; i++){
         huespedes[i]->asociarReservas(reservaciones, totReservas);
