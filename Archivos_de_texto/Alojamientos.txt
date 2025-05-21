@@ -1,5 +1,0 @@
-codigoAloj; nombre; nombreAnfitrion; departamento; municipio; tipo; dirección; precioNoche; amenidades; fechasFuturas
-Al1; Viña del mar; Camilo Gonzales; Antioquia; Necoclí; casa; calle La Linda; 50000; piscina, aire acondicionado, parqueadero; 23/05/2025, 08/08/2025
-Al2; Malecon al río; Ana Ocampo; Antioquia; Puerto Triunfo; apartamento; cra 10 #13-14; 30000; aire acondicionado, parqueadero, patio; 29/12/2025
-Al
-3; Vista al peñol; Ana Ocampo; Antioquia; El Peñol; apartamento; cll 30 #24-05; 100000; piscina, aire acondicionado, parqueadero, patio; 10/10/2025
