@@ -1,5 +1,0 @@
-documento; clave; antiguedad; puntuacion; infoReservas
-1001470812; 1234; 5; 3.8; R3, R4
-71116826; 3456; 2; 4.6; R5
-87234564; 7321; 7; 4.3; R6
-34557673; 6534; 1; 2.3; 0
