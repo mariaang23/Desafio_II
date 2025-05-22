@@ -7,7 +7,7 @@ using namespace std;
 
 Reservas::Reservas(const string& _codigoReserva, const string& _fechaEntrada, const string& _cantNoches, const string& _codigoAlojamiento,
                    const string& _cedulaHuesped, const string& _metodoPago, const string& _fechaPago, const string& _monto, const string& _anotaciones)
-    : codigoReserva(_codigoReserva), fechaEntrada(_fechaEntrada), cantNoches(_cantNoches), codigoAlojamiento(_codigoAlojamiento),
+    : codigoReserva(_codigoReserva), fechaEntrada(_fechaEntrada), cantNoches(_cantNoches), codigoAlojamiento(_codigoAlojamiento), alojamientoPtr(nullptr),
     cedulaHuesped(_cedulaHuesped), metodoPago(_metodoPago), fechaPago(_fechaPago), monto(_monto), anotaciones(_anotaciones){};
 
 
@@ -18,6 +18,32 @@ const string& Reservas::getCodigoReserva() const {
 const string& Reservas::getCodigoAlojamiento() const {
     return codigoAlojamiento;
 }
+
+const string& Reservas::getCantidadNoches() const{
+    return cantNoches;
+}
+
+Alojamiento* Reservas::getAlojamiento() const {
+    return alojamientoPtr;
+}
+
+void Reservas::enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos) {
+    for (int i = 0; i < totalAlojamientos; ++i) {
+        if (alojamientos[i]->getCodigoAlojamiento() == codigoAlojamiento) {
+            alojamientoPtr = alojamientos[i];
+            break;
+        }
+    }
+}
+
+float Reservas::calcularMonto(Alojamiento* _alojamientoPtr, string& _cantNoches){
+    float preNoche = stof(_alojamientoPtr->getPrecio());
+    float cantidadNoches = stof(_cantNoches);
+    float montoPagar=preNoche*cantidadNoches;
+
+    return montoPagar;
+}
+
 
 void Reservas::cargarReservas(Reservas**& reservaciones, int& totalReservas ){
     ifstream archivo("ReservasActivas.txt");

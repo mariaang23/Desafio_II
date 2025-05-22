@@ -27,6 +27,8 @@ public:
     void mostrarAlojamientos() const;
 
     static void cargarAlojamientos(Alojamiento**& alojamientos, int& totalAlojamientos);
+
+    const string& getPrecio();
 };
 
 #endif // ALOJAMIENTO_H

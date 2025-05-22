@@ -15,6 +15,10 @@ const string& Alojamiento::getCodigoAlojamiento() const {
     return codigo;
 }
 
+const string& Alojamiento::getPrecio(){
+    return precio;
+}
+
 void Alojamiento::mostrarAlojamientos() const {
     cout << "    - " << nombre << " (" << tipo << ", $" << precio << ")\n";
 }

@@ -1,6 +1,7 @@
 #ifndef RESERVAS_H
 #define RESERVAS_H
 
+#include "alojamiento.h"
 #include <string>
 using namespace std;
 
@@ -11,6 +12,7 @@ private:
     string fechaEntrada;
     string cantNoches;
     string codigoAlojamiento;
+    Alojamiento* alojamientoPtr;
     string cedulaHuesped;
     string metodoPago;
     string fechaPago;
@@ -25,9 +27,17 @@ public:
 
     const string& getCodigoAlojamiento() const;
 
+    const string& getCantidadNoches() const;
+
     void mostrarReservas() const;
 
     static void cargarReservas(Reservas**& reservaciones, int& totalReservas);
+
+    Alojamiento* getAlojamiento() const;
+
+    void enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos);
+
+    float calcularMonto(Alojamiento* _alojamientoPtr, string& _cantNoches);
 
 };
 #endif // RESERVAS_H
