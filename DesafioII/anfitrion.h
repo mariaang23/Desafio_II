@@ -20,7 +20,9 @@ private:
 public:
     Anfitrion(const string& _cedula, const string& _clave, const string& _antiguedad, const string& _puntos, const string& _codigosAlojamientos);
 
-    const string& getCedula() const;
+    const string& getCedulaAnfitrion() const;
+
+    const string& getClaveAnfitrion() const;
 
     static void cargarAnfitriones(Anfitrion**& anfitriones, int& totalAnfitriones);
 

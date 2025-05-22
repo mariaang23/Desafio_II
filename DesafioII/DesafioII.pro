@@ -9,11 +9,13 @@ SOURCES += \
         fecha.cpp \
         huesped.cpp \
         main.cpp \
-        reservas.cpp
+        reservas.cpp \
+        utilidades.cpp
 
 HEADERS += \
     alojamiento.h \
     anfitrion.h \
     fecha.h \
     huesped.h \
-    reservas.h
+    reservas.h \
+    utilidades.h

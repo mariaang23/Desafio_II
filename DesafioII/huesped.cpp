@@ -17,9 +17,14 @@ Huesped::~Huesped(){
     }
 }
 
-const string& Huesped::getCedula() const {
+const string& Huesped::getCedulaHuesped() const {
     return cedula;
 }
+
+const string& Huesped::getClaveHuesped() const{
+    return clave;
+}
+
 
 void Huesped::cargarHuespedes(Huesped**& huespedes, int& totalHuespedes){
     ifstream archivo("huespedes.txt");
@@ -58,10 +63,11 @@ void Huesped::asociarReservas(Reservas** listaReservas, int totalReservas){
         if (c == ',') numReservas++; // Contar la cantidad de reservas que tiene cada huesped
     }
     //   std::cout << numReservas << std::endl;
-
+    /*
     if (reservasHuesped != nullptr) {
         delete[] reservasHuesped;  // Limpiar las reservas existentes, si las hay
     }
+    */
 
     reservasHuesped = new Reservas*[numReservas]; // Arreglo para almacenar reservas que le corresponden a cada huesped
     cantidadReservas = 0;
@@ -80,9 +86,9 @@ void Huesped::asociarReservas(Reservas** listaReservas, int totalReservas){
 
         //Buscar la reserva correspondiente en la lista de reservas
         if (!codReserva.empty()){    for (int i = 0; i < totalReservas; i++){
-                cout << "objRes: "<< listaReservas[i]->getCodigoReserva() << " - " << "codResHuesp:" <<codReserva <<endl;
+                //cout << "objRes: "<< listaReservas[i]->getCodigoReserva() << " - " << "codResHuesp:" <<codReserva <<endl;
                 if (listaReservas[i]->getCodigoReserva() == codReserva){
-                    cout <<"Entra" << endl;
+                    //cout <<"Entra" << endl;
                     reservasHuesped[cantidadReservas++] = listaReservas[i]; // Asignar la reserva al arreglo de reservas del Huesped (enlazar al huesped con sus reservas)
                     break;
                 }
@@ -101,3 +107,4 @@ void Huesped::mostrarReservasHuesped(){
     }
 
 }
+

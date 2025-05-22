@@ -23,7 +23,9 @@ public:
 
     ~Huesped();
 
-    const string& getCedula() const;
+    const string& getCedulaHuesped() const;
+
+    const string& getClaveHuesped() const;
 
     int reservarAlojamiento(Reservas* reserva); //Falta
 
@@ -34,7 +36,6 @@ public:
     void asociarReservas(Reservas** listaReservas, int totalReservas);
 
     void mostrarReservasHuesped();
-
 };
 
 #endif // HUESPED_H

@@ -10,8 +10,12 @@ Anfitrion::Anfitrion(const string& _cedula, const string& _clave, const string& 
     : cedula(_cedula),clave(_clave), antiguedad(_antiguedad), puntuacion(_puntos), codigosAlojamientos(_codigosAlojamientos) {
 }
 
-const string& Anfitrion::getCedula() const {
+const string& Anfitrion::getCedulaAnfitrion() const {
     return cedula;
+}
+
+const string& Anfitrion::getClaveAnfitrion() const{
+    return clave;
 }
 
 void Anfitrion::cargarAnfitriones(Anfitrion**& anfitriones, int& totalAnfitriones) {
@@ -51,10 +55,11 @@ void Anfitrion::asociarAlojamientos(Alojamiento** listaAlojamientos, int totalAl
     for (char c : codigosAlojamientos){
         if (c == ',') numAlojamientos++;
     }
-
+    /*
     if (alojamientosAnfitrion != nullptr) {
         delete[] alojamientosAnfitrion;
     }
+*/
 
     alojamientosAnfitrion = new Alojamiento*[numAlojamientos];
     cantidadAlojamientos = 0;
@@ -94,3 +99,4 @@ void Anfitrion::mostrarAlojamientosAnfitrion(){
         alojamientosAnfitrion[j]->mostrarAlojamientos();
     }
 }
+
