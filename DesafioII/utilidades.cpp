@@ -35,7 +35,7 @@ int intValidation(int limInf,int limSup){
 void mostrarMenuAnfitrion(){
     bool exit = false;
     while (!exit){
-        cout << "\nMENU ANFITRION:\n1. Consultar reservas\n2. Anular Reservacion\n3. 	Actualizar historico\n4. Salir\n";
+        cout << "\nMENU ANFITRION:\n1. Consultar reservas\n2. Anular reservacion\n3. Actualizar historico\n4. Salir\n";
         int opc = intValidation(1, 4);
 
         /*
@@ -59,7 +59,7 @@ void mostrarMenuAnfitrion(){
 void mostrarMenuHuesped(){
     bool exit = false;
     while (!exit){
-        cout << "\nMENU HUESPED:\n1. Reservar alojamiento\n2. Anular Reservacion\n3. Salir\n";
+        cout << "\nMENU HUESPED:\n1. Reservar alojamiento\n2. Anular reservacion\n3. Salir\n";
         int opc = intValidation(1, 3);
         /*
         if (opc == 1) {

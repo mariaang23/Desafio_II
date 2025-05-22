@@ -3,16 +3,9 @@
 
 // Función interna para verificar si el año es bisiesto
 bool Fecha::esBisiesto() const {
-    if (anio % 400 == 0) {
-        return true;
-    }
-    if (anio % 100 == 0) {
-        return false;
-    }
-    if (anio % 4 == 0) {
-        return true;
-    }
-    return false;
+    if (anio % 400 == 0) return true;
+    if (anio % 100 == 0) return false;
+    return anio % 4 == 0;
 }
 
 // Función interna para calcular el día de la semana
@@ -35,20 +28,25 @@ int Fecha::calcularDiaSemana() const {
 
     // h = 0 -> sábado, 1 -> domingo, 2 -> lunes, ..., 6 -> viernes
     // Queremos: 1=Lunes,...,7=Domingo
-    int diaSemana;
-    if (h == 0) {
-        diaSemana = 6;  // sábado
-    } else if (h == 1) {
-        diaSemana = 7;  // domingo
-    } else {
-        diaSemana = h - 1; // lunes a viernes
+    if (h == 0) return 6;      // Sábado
+    else if (h == 1) return 7; // Domingo
+    else return h - 1;         // Lunes a Viernes
+}
+
+// Devuelve el número de días que tiene un mes, considerando si es bisiesto
+int Fecha::diasDelMes(int mes, int anio) const {
+    if (mes == 2) {
+        return ( (anio % 4 == 0 && anio % 100 != 0) || (anio % 400 == 0) ) ? 29 : 28;
     }
-    return diaSemana;
+    else if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {
+        return 30;
+    }
+    return 31;
 }
 
 // Constructor con valores por defecto
-Fecha::Fecha(int diaInicial, int mesInicial, int anioInicial): dia(diaInicial), mes(mesInicial), anio(anioInicial){
-}
+Fecha::Fecha(int diaInicial, int mesInicial, int anioInicial)
+    : dia(diaInicial), mes(mesInicial), anio(anioInicial){}
 
 // Métodos getters
 int Fecha::getDia() const { return dia; }
@@ -57,58 +55,50 @@ int Fecha::getAnio() const { return anio; }
 
 // Método para validar la fecha
 bool Fecha::esValida() const {
-    if (anio < 1900) {
-        return false;  // Año mínimo permitido
+    if (anio < 1900 || mes < 1 || mes > 12 || dia < 1) {
+        return false;
     }
-
-    if (mes < 1 || mes > 12) {
-        return false;  // Mes inválido
+    if (dia > diasDelMes(mes, anio)) {
+        return false;
     }
-
-    if (dia < 1) {
-        return false;  // Día inválido
-    }
-
-    // Días por mes
-    int diasPorMes[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
-
-    // Ajustar febrero si es bisiesto
-    if (esBisiesto()) {
-        diasPorMes[1] = 29;
-    }
-
-    if (dia > diasPorMes[mes - 1]) {
-        return false;  // Día excede el número máximo del mes
-    }
-
     return true;
 }
 
 // Sobrecarga operador <
 bool Fecha::operator<(const Fecha& otraFecha) const {
-    if (anio < otraFecha.anio) {
-        return true;
-    } else if (anio > otraFecha.anio) {
-        return false;
-    }
-
-    if (mes < otraFecha.mes) {
-        return true;
-    } else if (mes > otraFecha.mes) {
-        return false;
-    }
-
-    if (dia < otraFecha.dia) {
-        return true;
-    } else {
-        return false;
-    }
+    if (anio != otraFecha.anio) return anio < otraFecha.anio;
+    if (mes != otraFecha.mes) return mes < otraFecha.mes;
+    return dia < otraFecha.dia;
 }
 
-// Sobrecarga operador ==
 bool Fecha::operator==(const Fecha& otraFecha) const {
     return (dia == otraFecha.dia && mes == otraFecha.mes && anio == otraFecha.anio);
 }
+
+// Sobrecarga operador +
+Fecha Fecha::operator+(int diasASumar) const {
+    int d = dia;
+    int m = mes;
+    int a = anio;
+
+    // Sumar los días
+    d += diasASumar;
+
+    // Ajustar la fecha si el día excede el número de días en el mes
+    while (d > diasDelMes(m, a)) {
+        d -= diasDelMes(m, a);
+        m++;
+        if (m > 12) {
+            m = 1;
+            a++;  // Incrementar el año si se pasa de diciembre
+        }
+    }
+
+    // Retornar la nueva fecha con los días sumados
+    return Fecha(d, m, a);
+}
+
+
 
 // Imprimir fecha con formato: "Lunes, 15 de Abril del 2025"
 void Fecha::imprimirConDia() const {
@@ -125,6 +115,7 @@ void Fecha::imprimirConDia() const {
 
     std::cout << nombresDias[indiceDia] << ", " << dia << " de " << nombresMeses[mes - 1] << " del " << anio;
 }
+
 
 // Imprimir fecha simple: "15 de Abril del 2025"
 void Fecha::imprimir() const {
