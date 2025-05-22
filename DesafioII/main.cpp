@@ -2,7 +2,6 @@
 #include "huesped.h"
 #include "alojamiento.h"
 #include "anfitrion.h"
-#include "fecha.h"
 #include "utilidades.h"
 #include <iostream>
 #include <string>
@@ -22,17 +21,11 @@ int main()
         anfitriones[i]->asociarAlojamientos(alojamientos, totalAlojamientos);
     }
 
-    /*
-    //Mostrar alojamientos
-    for (int i = 0; i < totalAnfitriones; i++){
-        anfitriones[i]->mostrarAlojamientosAnfitrion();
-    }
-    */
-
     int totReservas = 0, totalHuespedes = 0;
     Reservas** reservaciones = nullptr;
     Huesped** huespedes = nullptr;
     Reservas::cargarReservas(reservaciones, totReservas);
+
     Huesped::cargarHuespedes(huespedes, totalHuespedes);
 
     //Asociar las reservas a los huespedes
@@ -40,19 +33,20 @@ int main()
         huespedes[i]->asociarReservas(reservaciones, totReservas);
     }
 
-    /*
-    // Mostrar reservas de cada huesped
-    for (int i = 0; i < totHuespedes; i++){
-        huespedes[i]->mostrarReservasHuesped();
+    for (int i = 0; i < totReservas; i++) {
+        reservaciones[i]->asociarFechasReservadas();  // Asociar fechas a cada reserva
     }
-    */
 
+    for (int i = 0; i < totReservas; i++) {
+        reservaciones[i]->mostrarFechasReservadas();  // Mostrar fechas reservadas de cada reserva
+    }
 
     string id, key;
-    cout << "Ingrese su documento :" << endl;
+    cout << "Ingrese su documento: " << endl;
     cin >> id;
-    cout << "Ingrese su clave :" << endl;
+    cout << "Ingrese su clave: " << endl;
     cin >> key;
+
 
     for (int i = 0; i < totalAnfitriones; i++){
         if ((anfitriones[i]->getCedulaAnfitrion() == id) && (anfitriones[i]->getClaveAnfitrion() == key)){
@@ -65,5 +59,6 @@ int main()
             mostrarMenuHuesped();
         }
     }
+
     return 0;
 }
