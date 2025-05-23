@@ -3,6 +3,7 @@
 
 #include <string>
 #include "alojamiento.h"
+#include "reservas.h"
 
 using namespace std;
 
@@ -20,13 +21,18 @@ private:
 public:
     Anfitrion(const string& _cedula, const string& _clave, const string& _antiguedad, const string& _puntos, const string& _codigosAlojamientos);
 
-    const string& getCedula() const;
+    const string& getCedulaAnfitrion() const;
+
+    const string& getClaveAnfitrion() const;
 
     static void cargarAnfitriones(Anfitrion**& anfitriones, int& totalAnfitriones);
 
     void asociarAlojamientos(Alojamiento** listaAlojamientos, int totalAlojamientos);
 
     void mostrarAlojamientosAnfitrion();
+
+    void mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int totalReservas);
+
 };
 
 #endif // ANFITRION_H
