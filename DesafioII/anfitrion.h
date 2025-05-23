@@ -3,6 +3,7 @@
 
 #include <string>
 #include "alojamiento.h"
+#include "reservas.h"
 
 using namespace std;
 
@@ -29,6 +30,9 @@ public:
     void asociarAlojamientos(Alojamiento** listaAlojamientos, int totalAlojamientos);
 
     void mostrarAlojamientosAnfitrion();
+
+    void mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int totalReservas);
+
 };
 
 #endif // ANFITRION_H

@@ -24,6 +24,22 @@ public:
 
     const string& getCodigoAlojamiento() const;
 
+    const string& getNombre()const;
+
+    const string& getNombreAnfitrion()const;
+
+    const string& getDepartamento() const;
+
+    const string& getMunicipio() const;
+
+    const string& getTipo() const;
+
+    const string& getDireccion()const;
+
+    const string& getPrecio()const;
+
+    const string& getAmenidades()const;
+
     void mostrarAlojamientos() const;
 
     static void cargarAlojamientos(Alojamiento**& alojamientos, int& totalAlojamientos);

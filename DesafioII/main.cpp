@@ -29,15 +29,15 @@ int main()
     }
     */
 
-    int totReservas = 0, totalHuespedes = 0;
+    int totalReservas = 0, totalHuespedes = 0;
     Reservas** reservaciones = nullptr;
     Huesped** huespedes = nullptr;
-    Reservas::cargarReservas(reservaciones, totReservas);
+    Reservas::cargarReservas(reservaciones, totalReservas);
     Huesped::cargarHuespedes(huespedes, totalHuespedes);
 
     //Asociar las reservas a los huespedes
     for (int i = 0; i < totalHuespedes; i++){
-        huespedes[i]->asociarReservas(reservaciones, totReservas);
+        huespedes[i]->asociarReservas(reservaciones, totalReservas);
     }
 
     /*
@@ -48,15 +48,27 @@ int main()
     */
 
 
+    //Enlace de reservas a alojamientos
+    for (int i = 0; i < totalReservas; ++i) {
+        reservaciones[i]->enlazarAlojamiento(alojamientos, totalAlojamientos);
+    }
+
+    //mostrar todas las reservas de los alojamientos existentes solo para prueba:
+    //mostrarReservasPorAlojamiento(alojamientos, totalAlojamientos, reservaciones, totalReservas);
+
+
+    //Login funciona perfecto
     string id, key;
     cout << "Ingrese su documento :" << endl;
     cin >> id;
     cout << "Ingrese su clave :" << endl;
     cin >> key;
 
-    for (int i = 0; i < totalAnfitriones; i++){
-        if ((anfitriones[i]->getCedulaAnfitrion() == id) && (anfitriones[i]->getClaveAnfitrion() == key)){
-            mostrarMenuAnfitrion();
+    for (int i = 0; i < totalAnfitriones; i++) {
+        if ((anfitriones[i]->getCedulaAnfitrion() == id) && (anfitriones[i]->getClaveAnfitrion() == key)) {
+            Anfitrion* anfitrionActual = anfitriones[i];
+            mostrarMenuAnfitrion(anfitrionActual, reservaciones, totalReservas);
+            break;
         }
     }
 

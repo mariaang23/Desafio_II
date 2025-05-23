@@ -19,6 +19,34 @@ const string& Alojamiento::getPrecio(){
     return precio;
 }
 
+const string& Alojamiento::getNombre() const {
+    return nombre;
+}
+
+const string& Alojamiento::getDepartamento() const {
+    return departamento;
+}
+
+const string& Alojamiento::getMunicipio() const {
+    return municipio;
+}
+
+const string& Alojamiento::getTipo() const {
+    return tipo;
+}
+
+const string& Alojamiento::getDireccion() const {
+    return direccion;
+}
+
+const string& Alojamiento::getPrecio() const {
+    return precio;
+}
+
+const string& Alojamiento::getAmenidades() const {
+    return amenidades;
+}
+
 void Alojamiento::mostrarAlojamientos() const {
     cout << "    - " << nombre << " (" << tipo << ", $" << precio << ")\n";
 }
@@ -55,4 +83,27 @@ void Alojamiento::cargarAlojamientos(Alojamiento**& alojamientos, int& totalAloj
         alojamientos[i++] = nuevoAlojamiento;
     }
     archivo.close();
+}
+
+void guardarAlojamientos(Alojamiento** alojamientos, int total, const string& archivo) {
+    ofstream out(archivo, ios::trunc);
+    if (!out.is_open()) {
+        cout << "No se pudo abrir el archivo: " << archivo << endl;
+        return;
+    }
+
+    for (int i = 0; i < total; ++i) {
+        out << alojamientos[i]->getCodigoAlojamiento() << ";"
+            << alojamientos[i]->getNombre() << ";"
+            //<< alojamientos[i]->getNombreAnfitrion() << ";"
+            << alojamientos[i]->getDepartamento() << ";"
+            << alojamientos[i]->getMunicipio() << ";"
+            << alojamientos[i]->getTipo() << ";"
+            << alojamientos[i]->getDireccion() << ";"
+            << alojamientos[i]->getPrecio() << ";"
+            << alojamientos[i]->getAmenidades() << ";";
+            //<< alojamientos[i]->getFechasReservadasStr() << endl;
+    }
+
+    out.close();
 }

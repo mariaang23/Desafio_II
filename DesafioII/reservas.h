@@ -29,7 +29,11 @@ public:
 
     const string& getCantidadNoches() const;
 
+    const string& getFechaEntrada() const;
+
     void mostrarReservas() const;
+
+    void mostrarReserva() const;
 
     static void cargarReservas(Reservas**& reservaciones, int& totalReservas);
 

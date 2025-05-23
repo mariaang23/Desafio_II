@@ -27,6 +27,9 @@ Alojamiento* Reservas::getAlojamiento() const {
     return alojamientoPtr;
 }
 
+const string& Reservas::getFechaEntrada() const{
+    return fechaEntrada;
+}
 void Reservas::enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos) {
     for (int i = 0; i < totalAlojamientos; ++i) {
         if (alojamientos[i]->getCodigoAlojamiento() == codigoAlojamiento) {
@@ -66,14 +69,15 @@ void Reservas::cargarReservas(Reservas**& reservaciones, int& totalReservas ){
         stringstream frase(linea);
         string codigoReserva_, fechaEntrada_, cantNoches_, codigoAlojamiento_, cedulaHuesped_, metodoPago_, fechaPago_, monto_, anotaciones_;
         getline(frase, codigoReserva_, ';');
-        getline(frase, fechaEntrada_, ';');
-        getline(frase, cantNoches_, ';');
         getline(frase, codigoAlojamiento_, ';');
         getline(frase, cedulaHuesped_, ';');
+        getline(frase, fechaEntrada_, ';');
+        getline(frase, cantNoches_, ';');
         getline(frase, metodoPago_, ';');
         getline(frase, fechaPago_, ';');
         getline(frase, monto_, ';');
         getline(frase, anotaciones_, ';');
+
         Reservas* nuevaReserva= new Reservas(codigoReserva_, fechaEntrada_, cantNoches_, codigoAlojamiento_, cedulaHuesped_, metodoPago_, fechaPago_, monto_, anotaciones_);
         reservaciones[i++] = nuevaReserva;
     }
@@ -91,6 +95,10 @@ void Reservas::mostrarReservas() const{
     cout << "Fecha de pago: " << fechaPago << " - ";
     cout << "Monto: " << monto << " - ";
     cout << "Anotaciones: " << anotaciones << endl;
+}
+
+void Reservas::mostrarReserva() const {
+    cout << "   - Reserva para fecha: " << fechaEntrada << ", nombre huesped: " << cedulaHuesped << endl;
 }
 
 

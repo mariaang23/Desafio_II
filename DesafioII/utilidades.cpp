@@ -32,29 +32,28 @@ int intValidation(int limInf,int limSup){
 
 
 
-void mostrarMenuAnfitrion(){
+void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas** reservaciones, int totalReservas)
+{
     bool exit = false;
     while (!exit){
-        cout << "\nMENU ANFITRION:\n1. Consultar reservas\n2. Anular Reservacion\n3. 	Actualizar historico\n4. Salir\n";
+        cout << "\nMENU ANFITRION:\n1. Consultar reservas\n2. Anular Reservacion\n3. Actualizar historico\n4. Salir\n";
         int opc = intValidation(1, 4);
 
-        /*
         if (opc == 1) {
-            //consultarReservas();
+            anfitrionActual->mostrarReservasDeSusAlojamientos(reservaciones, totalReservas);
         }
         else if (opc == 2) {
-            //anularReserva();
+            cout << "Funcion anular reservacion aun no esta implementada.\n";
         }
         else if (opc == 3) {
-            //actualizarHistorico();
+            cout << "Funcion actualizar historico aun no esta implementada.\n";
         }
-        else{
+        else {
             exit = true;
         }
-        */
-
     }
 }
+
 
 void mostrarMenuHuesped(){
     bool exit = false;
@@ -74,3 +73,26 @@ void mostrarMenuHuesped(){
         */
     }
 }
+
+void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamientos,
+                                   Reservas** reservaciones, int totalReservas) {
+    for (int i = 0; i < totalAlojamientos; ++i) {
+        string codigoAloj = alojamientos[i]->getCodigoAlojamiento();
+        cout << "Alojamiento: " << alojamientos[i]->getNombre() << " (Codigo: " << codigoAloj << ")" << endl;
+
+        bool tieneReservas = false;
+        for (int j = 0; j < totalReservas; ++j) {
+            if (reservaciones[j]->getCodigoAlojamiento() == codigoAloj) {
+                reservaciones[j]->mostrarReserva();
+                tieneReservas = true;
+            }
+        }
+
+        if (!tieneReservas) {
+            cout << "   No tiene reservas asociadas.\n";
+        }
+
+        cout << "--------------------------------------" << endl;
+    }
+}
+
