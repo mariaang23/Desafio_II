@@ -25,6 +25,17 @@ const string& Huesped::getClaveHuesped() const{
     return clave;
 }
 
+const string& Huesped::getAntiguedad() const{
+    return antiguedad;
+}
+
+const string& Huesped::getPuntuacion() const{
+    return puntuacion;
+}
+
+const string& Huesped::getCodigosReservas() const{
+    return codigosReservas;
+}
 
 void Huesped::cargarHuespedes(Huesped**& huespedes, int& totalHuespedes){
     ifstream archivo("huespedes.txt");
@@ -107,4 +118,23 @@ void Huesped::mostrarReservasHuesped(){
     }
 
 }
+
+void Huesped::guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const string &archivo){
+    ofstream out(archivo, ios::trunc);
+    if (!out.is_open()) {
+        cerr << "No se pudo abrir el archivo: " << archivo << endl;
+        return;
+    }
+
+    for (int i = 0; i < totalHuespedes; ++i) {
+        out << huespedes[i]->getCedulaHuesped() << ";"
+            << huespedes[i]->getClaveHuesped() << ";"
+            << huespedes[i]->getAntiguedad() << ";"
+            << huespedes[i]->getPuntuacion() << ";"
+            << huespedes[i]->getCodigosReservas() << endl;
+    }
+
+    out.close();
+}
+
 
