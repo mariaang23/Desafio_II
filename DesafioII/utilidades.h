@@ -3,16 +3,16 @@
 
 #include "alojamiento.h"
 #include "anfitrion.h"
-#include "fecha.h"
 #include "reservas.h"
 #include "huesped.h"
-#include <string>
 
 using namespace std;
 
 bool rangeValidation(int numero, int intIni, int intFin);
 
 int intValidation(int limInf, int limSup);
+
+char charValidation(const string& mensajeStr);
 
 void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas** reservaciones, int totalReservas);
 

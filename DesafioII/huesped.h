@@ -31,7 +31,7 @@ public:
 
     int reservarAlojamiento(Reservas* reserva); //Falta
 
-    void anularReservacion(Reservas* reserva); //Falta
+    void anularReservacion(Huesped** huespedes,int totalHuespedes, const string& _codigoReserva);
 
     static void cargarHuespedes(Huesped**& huespedes, int& totalHuespedes);
 
@@ -39,7 +39,7 @@ public:
 
     void mostrarReservasHuesped();
 
-    void guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const string &archivo);
+    static void guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const string &archivo);
 };
 
 #endif // HUESPED_H
