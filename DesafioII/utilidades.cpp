@@ -1,7 +1,5 @@
 #include "utilidades.h"
 #include <iostream>
-#include <fstream>
-#include <sstream>
 using namespace std;
 
 bool rangeValidation(int numero, int intIni, int intFin){

@@ -18,6 +18,10 @@ const string& Anfitrion::getClaveAnfitrion() const{
     return clave;
 }
 
+const string& Anfitrion::getPuntuacion() const{
+    return puntuacion;
+}
+
 void Anfitrion::cargarAnfitriones(Anfitrion**& anfitriones, int& totalAnfitriones) {
     ifstream archivo("anfitriones.txt");
     if (!archivo.is_open()) {
