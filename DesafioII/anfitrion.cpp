@@ -104,3 +104,29 @@ void Anfitrion::mostrarAlojamientosAnfitrion(){
     }
 }
 
+void Anfitrion::mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int totalReservas) {
+    cout <<endl;
+    cout << "Reservas de los alojamientos del anfitrion " << cedula << ":\n";
+    for (int i = 0; i < cantidadAlojamientos; ++i) {
+
+        string codAloj = alojamientosAnfitrion[i]->getCodigoAlojamiento();
+        cout << "- Alojamiento: " << alojamientosAnfitrion[i]->getNombre()
+             << " (Codigo: " << codAloj << ")" << endl;
+
+        bool tieneReservas = false;
+
+        for (int j = 0; j < totalReservas; ++j) {
+            if (reservaciones[j]->getCodigoAlojamiento() == codAloj) {
+                reservaciones[j]->mostrarReserva();
+                tieneReservas = true;
+            }
+        }
+
+        if (!tieneReservas) {
+            cout << "   No tiene reservas.\n";
+        }
+
+        cout << "--------------------------------------" << endl;
+    }
+}
+

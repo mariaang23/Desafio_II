@@ -2,9 +2,7 @@
 #define ALOJAMIENTO_H
 
 #include <string>
-
 using namespace std;
-
 
 class Alojamiento {
 private:
@@ -26,10 +24,17 @@ public:
     const string& getCodigoAlojamiento() const;
     const string& getPrecio() const;
 
+    const string& getNombre() const;
+    const string& getNombreAnfitrion() const; // Asumiendo que lo usarás más adelante
+    const string& getDepartamento() const;
+    const string& getMunicipio() const;
+    const string& getTipo() const;
+    const string& getDireccion() const;
+    const string& getAmenidades() const;
+
     void mostrarAlojamientos() const;
 
     static void cargarAlojamientos(Alojamiento**& alojamientos, int& totalAlojamientos);
-    void guardarAlojamientosArchivo(Alojamiento**& alojamientos, int totalAlojamientos, const string& archivo);
 };
 
 #endif // ALOJAMIENTO_H
