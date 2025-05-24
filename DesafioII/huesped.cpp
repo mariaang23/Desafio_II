@@ -11,10 +11,13 @@ Huesped::Huesped(const string& _cedula, const string& _clave, const string& _ant
 
 
 Huesped::~Huesped(){
-    if (reservasHuesped != nullptr) {
-        delete[] reservasHuesped; // Eliminar el arreglo de reservas
-        reservasHuesped = nullptr; // Evitar el puntero colgante
+    cout << "Destructor Huesped" << endl;
+    for (int i = 0; i < cantidadReservas; i++){
+        delete reservasHuesped[i]; // Eliminar el arreglo de reservas
+        reservasHuesped[i] = nullptr;
     }
+    delete[] reservasHuesped;
+    reservasHuesped = nullptr;
 }
 
 const string& Huesped::getCedulaHuesped() const {
@@ -73,12 +76,6 @@ void Huesped::asociarReservas(Reservas** listaReservas, int totalReservas){
     for (char c : codigosReservas){
         if (c == ',') numReservas++; // Contar la cantidad de reservas que tiene cada huesped
     }
-    //   std::cout << numReservas << std::endl;
-    /*
-    if (reservasHuesped != nullptr) {
-        delete[] reservasHuesped;  // Limpiar las reservas existentes, si las hay
-    }
-    */
 
     reservasHuesped = new Reservas*[numReservas]; // Arreglo para almacenar reservas que le corresponden a cada huesped
     cantidadReservas = 0;
@@ -114,9 +111,7 @@ void Huesped::mostrarReservasHuesped(){
     for (int j = 0; j < cantidadReservas; j++){
         std::cout << "Reservas: " << cantidadReservas << std::endl;
         reservasHuesped[j]->mostrarReservas();
-
     }
-
 }
 
 void Huesped::guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const string &archivo){
@@ -137,42 +132,34 @@ void Huesped::guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, c
     out.close();
 }
 
-void Huesped::anularReservacion(Huesped** huespedes,int totalHuespedes, const string& _codigoReserva){
+void Huesped::anularReservacion(const string& _codigoReserva){
+
     for (int i = 0; i < cantidadReservas; i++){
         if(reservasHuesped[i]->getCodigoReserva() == _codigoReserva){
-
-            // Liberar fechas reservadas
-            int noches = stoi(reservasHuesped[i]->getCantNoches());
-            Fecha** fechas = reservasHuesped[i]->getFechasReservadas();
-
-            if (fechas != nullptr){
-                for (int j = 0; j < noches; j++){
-                    delete fechas[j];
-                    fechas[j] = nullptr;
-                }
-                delete[] fechas;
-                reservasHuesped[i]->setFechasReservadas(nullptr);
-            }
-
-            // Desenlazar alojamiento de la reserva
-
-            reservasHuesped[i]->setAlojamientoPtr(nullptr);
-
-            // Eliminar del arreglo de huesped
-
             delete reservasHuesped[i];
-
-            // Eliminar el puntero del arreglo y reacomodar
-            for (int k = 1; k < cantidadReservas; k++){
-                reservasHuesped[k] = reservasHuesped[k+1];
-            }
+            reservasHuesped[i] = nullptr;
             cantidadReservas--;
             reservasHuesped[cantidadReservas] = nullptr;
-
             cout << "Reserva " << _codigoReserva << " anulada correctamente.\n";
-            return;
         }
     }
+
+    // Actualizar codigos de las reservas correspondientes a huesped[i]
+    string codigo = "", codigoTotal = "";
+    for (size_t i = 0; i < codigosReservas.length(); i++){
+        if (codigosReservas[i] == ','){
+            codigo += codigosReservas[i];
+        }
+        else{
+            if (codigo != _codigoReserva){
+                codigoTotal += codigo + ',';
+            }
+            codigo = "";
+        }
+    }
+    codigosReservas = codigoTotal;
+
+    // Falta organizar arreglo de reservas para cada huesped, para actualizar archivo reservas vigentes
 }
 
 

@@ -12,7 +12,14 @@ Reservas::Reservas(const string& _codigoReserva, const string& _fechaEntrada, co
       alojamientoPtr(nullptr), cedulaHuesped(_cedulaHuesped), metodoPago(_metodoPago), fechaPago(_fechaPago), monto(_monto), anotaciones(_anotaciones) {};
 
 Reservas::~Reservas() {
+    int noches = stoi(cantNoches);
+    for (int i = 0; i < noches; i++){
+        delete fechasReservadas[i];
+        fechasReservadas[i] = nullptr;
+    }
     delete[] fechasReservadas;
+    fechasReservadas = nullptr;
+    alojamientoPtr = nullptr;
 }
 
 const string& Reservas::getCodigoReserva() const {
@@ -180,6 +187,7 @@ void Reservas::guardarReservasActivasArchivo(Reservas** reservas, int totalReser
         cerr << "No se pudo abrir el archivo: " << archivo << endl;
         return;
     }
+    cout << totalReservas << endl;
 
     for (int i = 0; i < totalReservas; ++i) {
         out << reservas[i]->getCodigoReserva() << ";"

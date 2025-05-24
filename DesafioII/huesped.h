@@ -13,7 +13,6 @@ private:
     string antiguedad;
     string puntuacion;
     string codigosReservas;
-
     Reservas** reservasHuesped;
     int cantidadReservas;
 
@@ -27,11 +26,11 @@ public:
     const string& getClaveHuesped() const;
     const string& getAntiguedad() const;
     const string& getPuntuacion() const;
-    const string& getCodigosReservas() const;
+    const string& getCodigosReservas() const; // Probar
 
     int reservarAlojamiento(Reservas* reserva); //Falta
 
-    void anularReservacion(Huesped** huespedes,int totalHuespedes, const string& _codigoReserva);
+    void anularReservacion(const string& _codigoReserva);
 
     static void cargarHuespedes(Huesped**& huespedes, int& totalHuespedes);
 
