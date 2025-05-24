@@ -125,8 +125,6 @@ void Anfitrion::mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int t
         if (!tieneReservas) {
             cout << "   No tiene reservas.\n";
         }
-
-        cout << "--------------------------------------" << endl;
     }
 }
 

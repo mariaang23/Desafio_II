@@ -25,11 +25,31 @@ int intValidation(int limInf, int limSup){
     }
 }
 
+char charValidation(const string& mensajeStr){
+    char opc;
+    while (true){
+        cout << mensajeStr;
+        cin >> opc;
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Entrada no válida. Intente de nuevo." << endl;
+        } else {
+            cin.ignore(1000, '\n'); // Limpiar el buffer por si escribieron más de un carácter
+            return opc;
+        }
+    }
+}
+
 void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas** reservaciones, int totalReservas)
 {
     bool exit = false;
     while (!exit){
-        cout << "\nMENU ANFITRION:\n1. Consultar reservas\n2. Anular reservacion\n3. Actualizar historico\n4. Salir\n";
+        cout << "------------------------------" << endl;
+        cout << "MENU ANFITRION" << endl;
+        cout << "------------------------------" << endl;
+        cout << "1. Consultar reservas\n2. Anular reservacion\n3. Actualizar historico\n4. Volver al menu principal\n";
         int opc = intValidation(1, 4);
 
         if (opc == 1) {
@@ -50,7 +70,10 @@ void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas** reservaciones, 
 void mostrarMenuHuesped(){
     bool exit = false;
     while (!exit){
-        cout << "\nMENU HUESPED:\n1. Reservar alojamiento\n2. Anular reservacion\n3. Salir\n";
+        cout << "------------------------------" << endl;
+        cout << "MENU HUESPED" << endl;
+        cout << "------------------------------" << endl;
+        cout << "1. Reservar alojamiento\n2. Anular reservacion\n3. Volver al menu principal\n";
         int opc = intValidation(1, 3);
         /*
         if (opc == 1) {

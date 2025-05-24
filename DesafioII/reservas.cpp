@@ -23,16 +23,48 @@ const string& Reservas::getCodigoAlojamiento() const {
     return codigoAlojamiento;
 }
 
+const string& Reservas::getCedulaHuesped() const{
+    return cedulaHuesped;
+}
+
+const string& Reservas::getFechaEntrada() const{
+    return fechaEntrada;
+}
+
 const string& Reservas::getCantNoches() const {
     return cantNoches;
+}
+
+const string& Reservas::getMetodoPago() const{
+    return metodoPago;
+}
+
+const string& Reservas::getFechaPago() const{
+    return fechaPago;
+}
+
+const string& Reservas::getMonto() const{
+    return monto;
+}
+
+const string& Reservas::getAnotaciones() const{
+    return anotaciones;
 }
 
 Alojamiento* Reservas::getAlojamiento() const {
     return alojamientoPtr;
 }
 
-const string& Reservas::getFechaEntrada() const {
-    return fechaEntrada;
+Fecha** Reservas::getFechasReservadas() const {
+    return fechasReservadas;
+}
+
+void Reservas::setFechasReservadas(Fecha ** nuevasFechas){
+    fechasReservadas = nuevasFechas;
+}
+
+void Reservas::setAlojamientoPtr(Alojamiento* nuevoPtr){
+    alojamientoPtr = nuevoPtr;
 }
 
 void Reservas::enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos) {
@@ -46,7 +78,7 @@ void Reservas::enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamien
 
 float Reservas::calcularMonto(Alojamiento* _alojamientoPtr, string& _cantNoches) {
     float preNoche = stof(_alojamientoPtr->getPrecio());
-    float cantidadNoches = stof(_cantNoches);
+    int cantidadNoches = stoi(_cantNoches);
     float montoPagar = preNoche * cantidadNoches;
     return montoPagar;
 }
@@ -100,7 +132,7 @@ void Reservas::mostrarReservas() const {
 }
 
 void Reservas::mostrarReserva() const {
-    cout << "   - Reserva para fecha: " << fechaEntrada << ", nombre huesped: " << cedulaHuesped << endl;
+    cout << "   - Reserva para fecha: " << fechaEntrada << ", cedula huesped: " << cedulaHuesped << endl;
 }
 
 void Reservas::asociarFechasReservadas() {
@@ -141,3 +173,26 @@ void Reservas::mostrarFechasReservadas() const {
         cout << endl;
     }
 }
+
+void Reservas::guardarReservasActivasArchivo(Reservas** reservas, int totalReservas, const string& archivo){
+    ofstream out(archivo, ios::trunc);
+    if (!out.is_open()) {
+        cerr << "No se pudo abrir el archivo: " << archivo << endl;
+        return;
+    }
+
+    for (int i = 0; i < totalReservas; ++i) {
+        out << reservas[i]->getCodigoReserva() << ";"
+            << reservas[i]->getCodigoAlojamiento() << ";"
+            << reservas[i]->getCedulaHuesped() << ";"
+            << reservas[i]->getFechaEntrada() << ";"
+            << reservas[i]->getCantNoches() << ";"
+            << reservas[i]->getMetodoPago() << ";"
+            << reservas[i]->getFechaPago() << ";"
+            << reservas[i]->getMonto() << ";"
+            << reservas[i]->getAnotaciones() << endl;
+    }
+
+    out.close();
+}
+

@@ -1,3 +1,10 @@
+#include "alojamiento.h"
+#include "reservas.h"
+#include "huesped.h"
+#include "anfitrion.h"
+#include "utilidades.h"
+#include <iostream>
+
 using namespace std;
 
 int main()
@@ -28,33 +35,54 @@ int main()
         reservaciones[i]->asociarFechasReservadas();
     }
 
-    for (int i = 0; i < totalReservas; i++) {
-        reservaciones[i]->mostrarFechasReservadas();
-    }
-
     // Enlazar reservas con alojamientos
     for (int i = 0; i < totalReservas; ++i) {
         reservaciones[i]->enlazarAlojamiento(alojamientos, totalAlojamientos);
     }
 
     // Login
-    string id, key;
-    cout << "Ingrese su documento: " << endl;
-    cin >> id;
-    cout << "Ingrese su clave: " << endl;
-    cin >> key;
+    bool exitPpal = false;
+    while(!exitPpal){
+        cout << "---------------------------------------------" << endl;
+        cout << "BIENVENIDO AL SISTEMA DE RESERVAS" << endl;
+        cout << "---------------------------------------------" << endl;
+        string id, key;
+        cout << "Ingrese su documento: " << endl;
+        cin >> id;
+        cout << "Ingrese su clave: " << endl;
+        cin >> key;
 
-    for (int i = 0; i < totalAnfitriones; i++) {
-        if ((anfitriones[i]->getCedulaAnfitrion() == id) && (anfitriones[i]->getClaveAnfitrion() == key)) {
-            Anfitrion* anfitrionActual = anfitriones[i];
-            mostrarMenuAnfitrion(anfitrionActual, reservaciones, totalReservas);
-            break;
+        bool loginExitoso = false;
+
+        for (int i = 0; i < totalAnfitriones; i++) {
+            if ((anfitriones[i]->getCedulaAnfitrion() == id) && (anfitriones[i]->getClaveAnfitrion() == key)) {
+                Anfitrion* anfitrionActual = anfitriones[i];
+                mostrarMenuAnfitrion(anfitrionActual, reservaciones, totalReservas);
+                loginExitoso = true;
+                break;
+            }
         }
-    }
+        if (!loginExitoso){
+            for (int i = 0; i < totalHuespedes; i++) {
+                if ((huespedes[i]->getCedulaHuesped() == id) && (huespedes[i]->getClaveHuesped() == key)) {
+                    mostrarMenuHuesped();
+                    loginExitoso = true;
+                }
+            }
+        }
+        if (!loginExitoso){
+            cout << "\nUsuario o clave incorrecta." << endl;
+        }
 
-    for (int i = 0; i < totalHuespedes; i++) {
-        if ((huespedes[i]->getCedulaHuesped() == id) && (huespedes[i]->getClaveHuesped() == key)) {
-            mostrarMenuHuesped();
+        string mensaje = "\nDesea salir del sistema o volver a iniciar sesion? \n[s] Salir\n[cualquier otra tecla] Volver al inicio de sesion\n";
+        char opcion = charValidation(mensaje);
+
+        if (opcion == 's' || opcion == 'S'){
+
+            Reservas::guardarReservasActivasArchivo(reservaciones, totalReservas, "ReservasActivas.txt");
+            Huesped::guardarHuespedesArchivo(huespedes, totalHuespedes, "huespedes.txt");
+            cout << "Ha salido del sistema" << endl;
+            exitPpal = true;
         }
     }
 

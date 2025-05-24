@@ -30,27 +30,32 @@ public:
 
     const string& getCodigoReserva() const;
     const string& getCodigoAlojamiento() const;
-    const string& getCantNoches() const;
-
-    const string& getCantidadNoches() const;
-
+    const string& getCedulaHuesped() const;
     const string& getFechaEntrada() const;
+    const string& getCantNoches() const;
+    const string& getMetodoPago() const;
+    const string& getFechaPago() const;
+    const string& getMonto() const;
+    const string& getAnotaciones() const;
+    Fecha** getFechasReservadas() const;
 
+    void setFechasReservadas(Fecha ** nuevasFechas);
+    void setAlojamientoPtr(Alojamiento* nuevoPtr);
+
+    Alojamiento* getAlojamiento() const;
     void mostrarReservas() const;
     void mostrarFechasReservadas() const;
+    void mostrarReserva() const;
 
     void asociarFechasReservadas();
 
-    void mostrarReserva() const;
-
     static void cargarReservas(Reservas**& reservaciones, int& totalReservas);
-
-    Alojamiento* getAlojamiento() const;
 
     void enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos);
 
     float calcularMonto(Alojamiento* _alojamientoPtr, string& _cantNoches);
 
+    static void guardarReservasActivasArchivo(Reservas** reservas, int totalReservas, const string& archivo);
 };
 #endif // RESERVAS_H
 
