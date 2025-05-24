@@ -1,5 +1,6 @@
 #include "utilidades.h"
 #include <iostream>
+#include <huesped.h>
 using namespace std;
 
 bool rangeValidation(int numero, int intIni, int intFin){
@@ -67,7 +68,7 @@ void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas** reservaciones, 
     }
 }
 
-void mostrarMenuHuesped(){
+void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes){
     bool exit = false;
     while (!exit){
         cout << "------------------------------" << endl;
@@ -75,17 +76,19 @@ void mostrarMenuHuesped(){
         cout << "------------------------------" << endl;
         cout << "1. Reservar alojamiento\n2. Anular reservacion\n3. Volver al menu principal\n";
         int opc = intValidation(1, 3);
-        /*
         if (opc == 1) {
-            reservarAlojamiento();
+            //reservarAlojamiento();
+            int a = 0;
         }
         else if (opc == 2) {
-            anularReserva();
+            string codReservaEliminar;
+            cout << "Ingrese el codigo de la reserva que desea eliminar: " << endl;
+            cin >> codReservaEliminar;
+            huespedActual->anularReservacion(codReservaEliminar);
         }
         else{
             exit = true;
         }
-        */
     }
 }
 
@@ -109,4 +112,18 @@ void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamie
 
         cout << "--------------------------------------" << endl;
     }
+}
+
+template <typename T>
+void liberarArregloDePunteros(T**& arreglo, int& total){
+    if (arreglo == nullptr) return;
+
+    for (int i = 0; i < total; ++i) {
+        delete arreglo[i];  // Liberar el objeto
+        arreglo[i] = nullptr;
+    }
+    delete[] arreglo;       // Liberar el arreglo de punteros
+
+    arreglo = nullptr;
+    total = 0;
 }

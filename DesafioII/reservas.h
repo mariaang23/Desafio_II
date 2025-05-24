@@ -39,7 +39,7 @@ public:
     const string& getAnotaciones() const;
     Fecha** getFechasReservadas() const;
 
-    void setFechasReservadas(Fecha ** nuevasFechas);
+    void setFechasReservadas(Fecha** nuevasFechas);
     void setAlojamientoPtr(Alojamiento* nuevoPtr);
 
     Alojamiento* getAlojamiento() const;

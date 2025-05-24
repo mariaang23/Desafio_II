@@ -16,9 +16,11 @@ char charValidation(const string& mensajeStr);
 
 void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas** reservaciones, int totalReservas);
 
-void mostrarMenuHuesped();
+void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes);
 
 void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamientos,
                                    Reservas** reservaciones, int totalReservas);
 
+template<typename T>
+void liberarArregloDePunteros(T**& arreglo, int& total);
 #endif // UTILIDADES_H

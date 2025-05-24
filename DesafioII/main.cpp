@@ -65,7 +65,8 @@ int main()
         if (!loginExitoso){
             for (int i = 0; i < totalHuespedes; i++) {
                 if ((huespedes[i]->getCedulaHuesped() == id) && (huespedes[i]->getClaveHuesped() == key)) {
-                    mostrarMenuHuesped();
+                    Huesped* huespedActual = huespedes[i];
+                    mostrarMenuHuesped(huespedActual, huespedes, totalHuespedes);
                     loginExitoso = true;
                 }
             }
@@ -78,13 +79,18 @@ int main()
         char opcion = charValidation(mensaje);
 
         if (opcion == 's' || opcion == 'S'){
-
-            Reservas::guardarReservasActivasArchivo(reservaciones, totalReservas, "ReservasActivas.txt");
             Huesped::guardarHuespedesArchivo(huespedes, totalHuespedes, "huespedes.txt");
+            Reservas::guardarReservasActivasArchivo(reservaciones, totalReservas, "ReservasActivas.txt");
             cout << "Ha salido del sistema" << endl;
             exitPpal = true;
         }
     }
+    /*
+    liberarArregloDePunteros(anfitriones, totalAnfitriones);
+    liberarArregloDePunteros(alojamientos, totalAlojamientos);
+    liberarArregloDePunteros(huespedes, totalHuespedes);
+    liberarArregloDePunteros(reservaciones, totalReservas);
+    */
 
     return 0;
 }
