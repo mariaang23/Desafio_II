@@ -11,7 +11,6 @@ Huesped::Huesped(const string& _cedula, const string& _clave, const string& _ant
 
 
 Huesped::~Huesped(){
-    cout << "Destructor Huesped" << endl;
     for (int i = 0; i < cantidadReservas; i++){
         delete reservasHuesped[i]; // Eliminar el arreglo de reservas
         reservasHuesped[i] = nullptr;
@@ -43,7 +42,7 @@ const string& Huesped::getCodigosReservas() const{
 void Huesped::cargarHuespedes(Huesped**& huespedes, int& totalHuespedes){
     ifstream archivo("huespedes.txt");
     if (!archivo.is_open()) {
-        cout << "No se pudo abrir el archivo de huespedes.\n";
+        cout << "No se pudo abrir el archivo de huespedes\n";
         return;
     }
 
@@ -94,9 +93,7 @@ void Huesped::asociarReservas(Reservas** listaReservas, int totalReservas){
 
         //Buscar la reserva correspondiente en la lista de reservas
         if (!codReserva.empty()){    for (int i = 0; i < totalReservas; i++){
-                //cout << "objRes: "<< listaReservas[i]->getCodigoReserva() << " - " << "codResHuesp:" <<codReserva <<endl;
                 if (listaReservas[i]->getCodigoReserva() == codReserva){
-                    //cout <<"Entra" << endl;
                     reservasHuesped[cantidadReservas++] = listaReservas[i]; // Asignar la reserva al arreglo de reservas del Huesped (enlazar al huesped con sus reservas)
                     break;
                 }
@@ -137,34 +134,76 @@ void Huesped::guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, c
     out.close();
 }
 
-void Huesped::anularReservacion(const string& _codigoReserva){
+void Huesped::anularReservacion(const string& _codigoReserva, Reservas**& reservaciones, int& totalReservas){
 
+    string codigoActual = "", nuevoCodigoReservas = "";
+
+    // Actualizar la cadena codigosReservas eliminando el codigo anulado
+    for (int i = 0; codigosReservas[i] != '\0'; i++) {
+        if (codigosReservas[i] != ',') {
+            codigoActual += codigosReservas[i];
+        } else {
+            if (codigoActual != _codigoReserva) {
+                if (!nuevoCodigoReservas.empty()) {
+                    nuevoCodigoReservas += ",";
+                }
+                nuevoCodigoReservas += codigoActual;
+            }
+            codigoActual = "";
+        }
+    }
+
+    // Procesar el último código si el string no termina en coma
+    if (!codigoActual.empty() && codigoActual != _codigoReserva) {
+        if (!nuevoCodigoReservas.empty()) {
+            nuevoCodigoReservas += ",";
+        }
+        nuevoCodigoReservas += codigoActual;
+    }
+
+    codigosReservas = nuevoCodigoReservas;
+
+    // Buscar indice de la reserva que se quiere borrar en reservasHuesped
+    int indexHuesped = -1;
     for (int i = 0; i < cantidadReservas; i++){
         if(reservasHuesped[i]->getCodigoReserva() == _codigoReserva){
-            delete reservasHuesped[i];
-            reservasHuesped[i] = nullptr;
-            cantidadReservas--;
-            reservasHuesped[cantidadReservas] = nullptr;
-            cout << "Reserva " << _codigoReserva << " anulada correctamente.\n";
+            indexHuesped = i;
+            break;
         }
     }
 
-    // Actualizar codigos de las reservas correspondientes a huesped[i]
-    string codigo = "", codigoTotal = "";
-    for (size_t i = 0; i < codigosReservas.length(); i++){
-        if (codigosReservas[i] == ','){
-            codigo += codigosReservas[i];
-        }
-        else{
-            if (codigo != _codigoReserva){
-                codigoTotal += codigo + ',';
+    if (indexHuesped == -1) {
+        cout << "\nReserva con código " << _codigoReserva << " no encontrada.\n";
+        return;
+    }
+
+    // Buscar y borrar la reserva del arreglo global de reservaciones
+    int indexGlobal = -1;
+    for (int i = 0; i < totalReservas; i++){
+        if (reservaciones[i] != nullptr && reservaciones[i]->getCodigoReserva() == _codigoReserva) {
+            indexGlobal = i;
+            delete reservaciones[i];
+            for (int j = i; j < totalReservas; j++){
+                reservaciones[j] = reservaciones[j + 1];
             }
-            codigo = "";
+            totalReservas--;
+            reservaciones[totalReservas] = nullptr;
+            break;
         }
     }
-    codigosReservas = codigoTotal;
 
-    // Falta organizar arreglo de reservas para cada huesped, para actualizar archivo reservas vigentes
+    if (indexGlobal == -1){
+        cout << "\nNo se encontro la reserva en el arreglo global\n";
+        return;
+    }
+
+    for (int j = indexHuesped; j < cantidadReservas - 1; j++) {
+        reservasHuesped[j] = reservasHuesped[j + 1];
+    }
+    cantidadReservas--;
+    reservasHuesped[cantidadReservas] = nullptr;
+
+    cout << "\nReserva " << _codigoReserva << " anulada correctamente\n";
 }
 
 void Huesped::liberarReservasHuesped(const string& _codigoReserva) {

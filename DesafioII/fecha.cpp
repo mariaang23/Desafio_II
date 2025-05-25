@@ -107,13 +107,13 @@ void Fecha::imprimirConDia() const {
                                     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
 
     if (!esValida()) {
-        std::cout << "Fecha inválida";
+        std::cout << "\nFecha inválida\n";
         return;
     }
 
     int indiceDia = calcularDiaSemana() - 1;  // Ajuste índice para array (0-based)
 
-    std::cout << nombresDias[indiceDia] << ", " << dia << " de " << nombresMeses[mes - 1] << " del " << anio;
+    std::cout << nombresDias[indiceDia] << ", " << dia << " de " << nombresMeses[mes - 1] << " del " << anio << std::endl;
 }
 
 
@@ -123,9 +123,9 @@ void Fecha::imprimir() const {
                                     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
 
     if (!esValida()) {
-        std::cout << "Fecha inválida";
+        std::cout << "\nFecha inválida\n";
         return;
     }
 
-    std::cout << dia << " de " << nombresMeses[mes - 1] << " del " << anio;
+    std::cout << dia << " de " << nombresMeses[mes - 1] << " del " << anio <<std::endl;
 }

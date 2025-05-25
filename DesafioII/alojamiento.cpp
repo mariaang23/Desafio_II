@@ -50,7 +50,7 @@ void Alojamiento::mostrarAlojamientos() const {
 void Alojamiento::cargarAlojamientos(Alojamiento**& alojamientos, int& totalAlojamientos) {
     ifstream archivo("alojamientos.txt");
     if (!archivo.is_open()) {
-        cout << "No se pudo abrir el archivo de Alojamientos.\n";
+        cout << "No se pudo abrir el archivo de Alojamientos\n";
         return;
     }
 

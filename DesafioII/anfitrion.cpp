@@ -26,7 +26,7 @@ const string& Anfitrion::getPuntuacion() const{
 void Anfitrion::cargarAnfitriones(Anfitrion**& anfitriones, int& totalAnfitriones) {
     ifstream archivo("anfitriones.txt");
     if (!archivo.is_open()) {
-        cout << "No se pudo abrir el archivo de Anfitriones.\n";
+        cout << "No se pudo abrir el archivo de Anfitriones\n";
         return;
     }
 
@@ -106,8 +106,6 @@ void Anfitrion::mostrarAlojamientosAnfitrion(){
 }
 
 void Anfitrion::mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int totalReservas) {
-    cout <<endl;
-    cout << "Reservas de los alojamientos del anfitrion " << cedula << ":\n";
     for (int i = 0; i < cantidadAlojamientos; ++i) {
 
         string codAloj = alojamientosAnfitrion[i]->getCodigoAlojamiento();
@@ -124,7 +122,7 @@ void Anfitrion::mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int t
         }
 
         if (!tieneReservas) {
-            cout << "   No tiene reservas.\n";
+            cout << "   No tiene reservas\n";
         }
     }
 }
