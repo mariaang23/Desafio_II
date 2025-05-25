@@ -181,13 +181,12 @@ void Reservas::mostrarFechasReservadas() const {
     }
 }
 
-void Reservas::guardarReservasActivasArchivo(Reservas** reservas, int totalReservas, const string& archivo){
+void Reservas::guardarReservasActivasArchivo(Reservas**& reservas, int& totalReservas, const string& archivo){
     ofstream out(archivo, ios::trunc);
     if (!out.is_open()) {
         cerr << "No se pudo abrir el archivo: " << archivo << endl;
         return;
     }
-    cout << totalReservas << endl;
 
     for (int i = 0; i < totalReservas; ++i) {
         out << reservas[i]->getCodigoReserva() << ";"

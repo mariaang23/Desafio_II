@@ -125,8 +125,13 @@ void Huesped::guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, c
         out << huespedes[i]->getCedulaHuesped() << ";"
             << huespedes[i]->getClaveHuesped() << ";"
             << huespedes[i]->getAntiguedad() << ";"
-            << huespedes[i]->getPuntuacion() << ";"
-            << huespedes[i]->getCodigosReservas() << endl;
+            << huespedes[i]->getPuntuacion() << ";";
+
+        string codigos = huespedes[i]->getCodigosReservas();
+        if (!codigos.empty()){
+            out << codigos;
+        }
+        out << endl;
     }
 
     out.close();
@@ -162,4 +167,25 @@ void Huesped::anularReservacion(const string& _codigoReserva){
     // Falta organizar arreglo de reservas para cada huesped, para actualizar archivo reservas vigentes
 }
 
+void Huesped::liberarReservasHuesped(const string& _codigoReserva) {
+    for (int i = 0; i < cantidadReservas; ++i) {
+        reservasHuesped[i] = nullptr;
+    }
+    reservasHuesped = nullptr;
+
+    // Actualizar codigos de las reservas correspondientes a huesped[i]
+    string codigo = "", codigoTotal = "";
+    for (size_t i = 0; i < codigosReservas.length(); i++){
+        if (codigosReservas[i] == ','){
+            codigo += codigosReservas[i];
+        }
+        else{
+            if (codigo != _codigoReserva){
+                codigoTotal += codigo + ',';
+            }
+            codigo = "";
+        }
+    }
+    codigosReservas = codigoTotal;
+}
 

@@ -57,7 +57,7 @@ int main()
         for (int i = 0; i < totalAnfitriones; i++) {
             if ((anfitriones[i]->getCedulaAnfitrion() == id) && (anfitriones[i]->getClaveAnfitrion() == key)) {
                 Anfitrion* anfitrionActual = anfitriones[i];
-                mostrarMenuAnfitrion(anfitrionActual, reservaciones, totalReservas);
+                mostrarMenuAnfitrion(anfitrionActual, reservaciones, totalReservas, huespedes, totalHuespedes);
                 loginExitoso = true;
                 break;
             }
@@ -75,7 +75,9 @@ int main()
             cout << "\nUsuario o clave incorrecta." << endl;
         }
 
-        string mensaje = "\nDesea salir del sistema o volver a iniciar sesion? \n[s] Salir\n[cualquier otra tecla] Volver al inicio de sesion\n";
+        string mensaje = "\n---- Seleccione la opcion que desee --- "
+                         "\nS. Salir"
+                         "\nV. Volver al inicio de sesion\n";
         char opcion = charValidation(mensaje);
 
         if (opcion == 's' || opcion == 'S'){

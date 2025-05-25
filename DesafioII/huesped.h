@@ -36,6 +36,8 @@ public:
 
     void asociarReservas(Reservas** listaReservas, int totalReservas);
 
+    void liberarReservasHuesped(const string& _codigoReserva);
+
     void mostrarReservasHuesped();
 
     static void guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const string &archivo);
