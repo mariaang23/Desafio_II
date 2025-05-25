@@ -1,4 +1,6 @@
 #include "alojamiento.h"
+#include "fecha.h"
+#include "reservas.h"
 
 #include <iostream>
 #include <fstream>
@@ -82,6 +84,28 @@ void Alojamiento::cargarAlojamientos(Alojamiento**& alojamientos, int& totalAloj
     }
     archivo.close();
 }
+
+
+bool Alojamiento::estaDisponible(const string& fechaEntrada, int cantNoches, Reservas** reservas, int totalReservas)
+{
+    Fecha fechaInicio = Fecha::fromString(fechaEntrada);
+    Fecha fechaFin = fechaInicio + cantNoches;
+
+    for (int i = 0; i < totalReservas; i++) {
+        if (reservas[i]->getAlojamiento() == this) {
+            Fecha reservaInicio = Fecha::fromString(reservas[i]->getFechaEntrada());
+            Fecha reservaFin = reservaInicio + reservas[i]->getCantNoches();
+
+            // Si se solapan las fechas, no está disponible
+            if (!(fechaFin < reservaInicio || reservaFin < fechaInicio)) {
+                return false;
+            }
+        }
+    }
+
+    return true; // si no se solapan las fechas
+}
+
 
 void guardarAlojamientos(Alojamiento** alojamientos, int total, const string& archivo) {
     ofstream out(archivo, ios::trunc);

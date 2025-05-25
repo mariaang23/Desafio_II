@@ -28,7 +28,10 @@ public:
     const string& getPuntuacion() const;
     const string& getCodigosReservas() const;
 
-    int reservarAlojamiento(Reservas* reserva); //Falta
+    void reservarAlojamiento(Reservas**& reservas, int& totalReservas,
+                             Huesped* huespedActual,
+                             Alojamiento** alojamientos, int totalAlojamientos,
+                             const string& fechaEntrada, int cantNoches);
 
     void anularReservacion(const string& _codigoReserva, Reservas**& reservaciones, int& totalReservas);
 

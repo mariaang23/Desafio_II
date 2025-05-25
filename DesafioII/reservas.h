@@ -11,7 +11,7 @@ class Reservas
 private:
     string codigoReserva;
     string fechaEntrada;
-    string cantNoches;
+    int cantNoches;
     string codigoAlojamiento;
     Alojamiento* alojamientoPtr;
     string cedulaHuesped;
@@ -23,7 +23,7 @@ private:
 
 
 public:
-    Reservas(const string& _codigoReserva, const string& _fechaEntrada, const string& _cantNoches, const string& _codigoAlojamiento,
+    Reservas(const string& _codigoReserva, const string& _fechaEntrada, int _cantNoches, const string& _codigoAlojamiento,
              const string& _cedulaHuesped, const string& _metodoPago, const string& _fechaPago, const string& _monto, const string& _anotaciones);
 
     ~Reservas();
@@ -32,7 +32,7 @@ public:
     const string& getCodigoAlojamiento() const;
     const string& getCedulaHuesped() const;
     const string& getFechaEntrada() const;
-    const string& getCantNoches() const;
+    int getCantNoches() const;
     const string& getMetodoPago() const;
     const string& getFechaPago() const;
     const string& getMonto() const;
@@ -53,7 +53,7 @@ public:
 
     void enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos);
 
-    float calcularMonto(Alojamiento* _alojamientoPtr, string& _cantNoches);
+    float calcularMonto(Alojamiento* _alojamientoPtr, int _cantNoches);
 
     static void guardarReservasActivasArchivo(Reservas **&reservas, int &totalReservas, const string& archivo);
 };

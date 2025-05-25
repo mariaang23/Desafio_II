@@ -4,6 +4,8 @@
 #include <string>
 using namespace std;
 
+class Reservas;
+
 class Alojamiento {
 private:
     string codigo;
@@ -33,6 +35,7 @@ public:
     const string& getAmenidades() const;
 
     void mostrarAlojamientos() const;
+    bool estaDisponible(const string& fechaEntrada, int cantNoches, Reservas** reservas, int totalReservas);
 
     static void cargarAlojamientos(Alojamiento**& alojamientos, int& totalAlojamientos);
 };

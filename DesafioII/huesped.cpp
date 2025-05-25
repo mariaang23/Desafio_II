@@ -1,5 +1,7 @@
 #include "huesped.h"
 #include "reservas.h"
+#include "utilidades.h"
+#include "alojamiento.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -226,5 +228,72 @@ void Huesped::liberarReservasHuesped(const string& _codigoReserva) {
         }
     }
     codigosReservas = codigoTotal;
+}
+
+void reservarAlojamiento(Reservas**& reservas, int& totalReservas,
+                         Huesped* huespedActual,
+                         Alojamiento** alojamientos, int totalAlojamientos,
+                         const string& fechaEntrada, int cantNoches){
+
+    cout << "\n----------Metodo de Busqueda----------\n";
+    cout << "1. Buscar por costo maximo por noche o por puntuacion minima anfitrion o ambos\n";
+    cout << "2. Buscar por codigo de alojamiento\n";
+
+    int opcionBusqueda = intValidation(1,2);
+    Alojamiento* alojamientoSeleccionado = nullptr;
+
+    if (opcionBusqueda == 1){
+        //Implementar codigo
+    }
+    else{
+        //Busqueda por codigo de alojamiento
+        string codigoAlojIngresado;
+        cout << "Ingrese el codigo del alojamiento que desea reservar: " << endl;
+        cin >> codigoAlojIngresado;
+
+        //Busqueda del codigo de alojamiento encada objeto de la clase alojamiento
+        for (int i = 0; i < totalAlojamientos; i++){
+            if (alojamientos[i]->getCodigoAlojamiento() == codigoAlojIngresado){
+                if (!alojamientos[i]->estaDisponible(fechaEntrada, cantNoches, reservas, totalReservas)){
+                    cout << "\nEl alojamiento no está disponible para la fecha y noches indicadas\n";
+                    return;
+                }
+                alojamientoSeleccionado = alojamientos[i];
+                break;
+            }
+        }
+        if (!alojamientoSeleccionado){
+            cout << "\nNo se encontro un alojamiento con el codigo ingresado\n";
+            return;
+        }
+    }
+
+    // Generar codigo automatico de la reserva
+    string codigoNuevaReserva = "R" + to_string(totalReservas + 1);
+
+    float precioPorNoche = stof(alojamientoSeleccionado->getPrecio());
+    float montoCalculado = precioPorNoche * cantNoches;
+
+    Reservas* nuevaReserva = new Reservas(codigoNuevaReserva, fechaEntrada, cantNoches, alojamientoSeleccionado->getCodigoAlojamiento(),
+                                                                                        huespedActual->getCedulaHuesped(), to_string(montoCalculado));
+
+    nuevaReserva->setAlojamientoPtr(alojamientoSeleccionado);
+    nuevaReserva->asociarFechasReservadas();
+
+    // Agregar las reservas al arreglo
+    Reservas** nuevasReservas = new Reservas*[totalReservas + 1];
+    for (int i = 0; i < totalReservas; i++) {
+        nuevasReservas[i] = reservas[i];
+    }
+    nuevasReservas[totalReservas] = nuevaReserva;
+    delete[] reservas;
+    reservas = nuevasReservas;
+    totalReservas++;
+
+    cout <<"\nReserva creada exitosamente\n";
+    nuevaReserva->mostrarReserva();
+
+
+
 }
 
