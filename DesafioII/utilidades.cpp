@@ -68,7 +68,7 @@ void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas** reservaciones, 
     }
 }
 
-void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes){
+void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes, Reservas**& reservaciones, int& totalReservas){
     bool exit = false;
     while (!exit){
         cout << "------------------------------" << endl;
@@ -84,7 +84,7 @@ void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHu
             string codReservaEliminar;
             cout << "Ingrese el codigo de la reserva que desea eliminar: " << endl;
             cin >> codReservaEliminar;
-            huespedActual->anularReservacion(codReservaEliminar);
+            huespedActual->anularReservacion(codReservaEliminar, reservaciones, totalReservas);
         }
         else{
             exit = true;
@@ -114,16 +114,3 @@ void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamie
     }
 }
 
-template <typename T>
-void liberarArregloDePunteros(T**& arreglo, int& total){
-    if (arreglo == nullptr) return;
-
-    for (int i = 0; i < total; ++i) {
-        delete arreglo[i];  // Liberar el objeto
-        arreglo[i] = nullptr;
-    }
-    delete[] arreglo;       // Liberar el arreglo de punteros
-
-    arreglo = nullptr;
-    total = 0;
-}

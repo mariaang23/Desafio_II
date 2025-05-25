@@ -26,11 +26,11 @@ public:
     const string& getClaveHuesped() const;
     const string& getAntiguedad() const;
     const string& getPuntuacion() const;
-    const string& getCodigosReservas() const; // Probar
+    const string& getCodigosReservas() const;
 
     int reservarAlojamiento(Reservas* reserva); //Falta
 
-    void anularReservacion(const string& _codigoReserva);
+    void anularReservacion(const string& _codigoReserva, Reservas**& reservaciones, int& totalReservas);
 
     static void cargarHuespedes(Huesped**& huespedes, int& totalHuespedes);
 
