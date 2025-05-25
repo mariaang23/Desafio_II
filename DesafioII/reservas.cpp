@@ -187,20 +187,21 @@ void Reservas::guardarReservasActivasArchivo(Reservas** reservas, int totalReser
         cerr << "No se pudo abrir el archivo: " << archivo << endl;
         return;
     }
-    cout << totalReservas << endl;
 
     for (int i = 0; i < totalReservas; ++i) {
-        out << reservas[i]->getCodigoReserva() << ";"
-            << reservas[i]->getCodigoAlojamiento() << ";"
-            << reservas[i]->getCedulaHuesped() << ";"
-            << reservas[i]->getFechaEntrada() << ";"
-            << reservas[i]->getCantNoches() << ";"
-            << reservas[i]->getMetodoPago() << ";"
-            << reservas[i]->getFechaPago() << ";"
-            << reservas[i]->getMonto() << ";"
-            << reservas[i]->getAnotaciones() << endl;
-    }
+        if (reservas[i] != nullptr){
+            out << reservas[i]->getCodigoReserva() << ";"
+                << reservas[i]->getCodigoAlojamiento() << ";"
+                << reservas[i]->getCedulaHuesped() << ";"
+                << reservas[i]->getFechaEntrada() << ";"
+                << reservas[i]->getCantNoches() << ";"
+                << reservas[i]->getMetodoPago() << ";"
+                << reservas[i]->getFechaPago() << ";"
+                << reservas[i]->getMonto() << ";"
+                << reservas[i]->getAnotaciones() << endl;
 
+        }
+    }
     out.close();
 }
 

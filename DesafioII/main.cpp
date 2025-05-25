@@ -57,7 +57,7 @@ int main()
         for (int i = 0; i < totalAnfitriones; i++) {
             if ((anfitriones[i]->getCedulaAnfitrion() == id) && (anfitriones[i]->getClaveAnfitrion() == key)) {
                 Anfitrion* anfitrionActual = anfitriones[i];
-                mostrarMenuAnfitrion(anfitrionActual, reservaciones, totalReservas);
+                //mostrarMenuAnfitrion(anfitrionActual, reservaciones, totalReservas);
                 loginExitoso = true;
                 break;
             }
@@ -66,7 +66,7 @@ int main()
             for (int i = 0; i < totalHuespedes; i++) {
                 if ((huespedes[i]->getCedulaHuesped() == id) && (huespedes[i]->getClaveHuesped() == key)) {
                     Huesped* huespedActual = huespedes[i];
-                    mostrarMenuHuesped(huespedActual, huespedes, totalHuespedes);
+                    mostrarMenuHuesped(huespedActual, huespedes, totalHuespedes, reservaciones, totalReservas);
                     loginExitoso = true;
                 }
             }
@@ -81,16 +81,21 @@ int main()
         if (opcion == 's' || opcion == 'S'){
             Huesped::guardarHuespedesArchivo(huespedes, totalHuespedes, "huespedes.txt");
             Reservas::guardarReservasActivasArchivo(reservaciones, totalReservas, "ReservasActivas.txt");
-            cout << "Ha salido del sistema" << endl;
+            cout << "\nHa salido del sistema" << endl;
             exitPpal = true;
         }
     }
-    /*
+
+    /*cout << "Liberando anfitriones..." << endl;
     liberarArregloDePunteros(anfitriones, totalAnfitriones);
+    cout << "Liberando alojamientos..." << endl;
     liberarArregloDePunteros(alojamientos, totalAlojamientos);
+    cout << "Liberando huespedes..." << endl;
     liberarArregloDePunteros(huespedes, totalHuespedes);
+    cout << "Liberando reservaciones..." << endl;
     liberarArregloDePunteros(reservaciones, totalReservas);
-    */
+    cout << "Liberacion terminada." << endl;*/
+
 
     return 0;
 }
