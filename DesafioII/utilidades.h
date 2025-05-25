@@ -14,6 +14,8 @@ int intValidation(int limInf, int limSup);
 
 char charValidation(const string& mensajeStr);
 
+void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas **&reservaciones, int &totalReservas, Huesped**& huespedes, int &totalHuespedes);
+
 void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes, Reservas**& reservaciones, int& totalReservas);
 
 void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamientos,

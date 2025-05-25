@@ -1,5 +1,6 @@
 #include "anfitrion.h"
 #include "alojamiento.h"
+#include "huesped.h"
 
 #include <iostream>
 #include <fstream>
@@ -126,3 +127,51 @@ void Anfitrion::mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int t
     }
 }
 
+void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&reservas, int& totalReservas, Huesped** huespedes, int totalHuespedes) {
+    // Buscar la reserva y obtener la cedula del huesped
+    string cedulaHuespedActualizar = "";
+    int indexReserva = -1;
+    for (int i = 0; i < totalReservas; ++i) {
+        if (reservas[i]->getCodigoReserva() == _codigoReserva) {
+            cedulaHuespedActualizar = reservas[i]->getCedulaHuesped();
+            indexReserva = i;
+            break;
+        }
+    }
+
+    if (indexReserva == -1) {
+        cout << "Reserva no encontrada.\n";
+        return;
+    }
+
+    // Buscar el huesped correspondiente
+    Huesped* huespedActualizado = nullptr;
+    for (int i = 0; i < totalHuespedes; ++i) {
+        if (huespedes[i]->getCedulaHuesped() == cedulaHuespedActualizar) {
+            huespedActualizado = huespedes[i];
+            break;
+        }
+    }
+
+    if (huespedActualizado == nullptr) {
+        cout << "Huesped no encontrado.\n";
+        return;
+    }
+
+    // Eliminar reserva del huesped
+    huespedActualizado->liberarReservasHuesped(_codigoReserva);
+
+    // Eliminar del arreglo global de reservas
+    delete reservas[indexReserva];
+    for (int i = indexReserva; i < totalReservas - 1; ++i) {
+        reservas[i] = reservas[i + 1];
+    }
+    totalReservas--;
+    reservas[totalReservas] = nullptr;
+
+    // Reasociar reservas locales del huesped
+    huespedActualizado->asociarReservas(reservas, totalReservas);
+
+
+    cout << "Reserva " << _codigoReserva << " anulada correctamente.\n";
+}

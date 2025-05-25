@@ -43,7 +43,7 @@ char charValidation(const string& mensajeStr){
     }
 }
 
-void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas** reservaciones, int totalReservas)
+void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas**& reservaciones, int& totalReservas, Huesped**& huespedes, int& totalHuespedes)
 {
     bool exit = false;
     while (!exit){
@@ -57,7 +57,11 @@ void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas** reservaciones, 
             anfitrionActual->mostrarReservasDeSusAlojamientos(reservaciones, totalReservas);
         }
         else if (opc == 2) {
-            cout << "Funcion anular reservacion aun no esta implementada.\n";
+            string codReservaEliminar;
+            cout << "Ingrese el codigo de la reserva que desea eliminar: " << endl;
+            cin >> codReservaEliminar;
+            anfitrionActual->anularReservacion(codReservaEliminar,reservaciones,totalReservas,huespedes,totalHuespedes);
+
         }
         else if (opc == 3) {
             cout << "Funcion actualizar historico aun no esta implementada.\n";

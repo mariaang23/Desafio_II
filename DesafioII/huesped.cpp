@@ -206,4 +206,25 @@ void Huesped::anularReservacion(const string& _codigoReserva, Reservas**& reserv
     cout << "\nReserva " << _codigoReserva << " anulada correctamente\n";
 }
 
+void Huesped::liberarReservasHuesped(const string& _codigoReserva) {
+    for (int i = 0; i < cantidadReservas; ++i) {
+        reservasHuesped[i] = nullptr;
+    }
+    reservasHuesped = nullptr;
+
+    // Actualizar codigos de las reservas correspondientes a huesped[i]
+    string codigo = "", codigoTotal = "";
+    for (size_t i = 0; i < codigosReservas.length(); i++){
+        if (codigosReservas[i] == ','){
+            codigo += codigosReservas[i];
+        }
+        else{
+            if (codigo != _codigoReserva){
+                codigoTotal += codigo + ',';
+            }
+            codigo = "";
+        }
+    }
+    codigosReservas = codigoTotal;
+}
 

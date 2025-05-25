@@ -4,6 +4,7 @@
 #include <string>
 #include "alojamiento.h"
 #include "reservas.h"
+#include "huesped.h"
 
 using namespace std;
 
@@ -32,6 +33,8 @@ public:
     void mostrarAlojamientosAnfitrion();
 
     void mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int totalReservas);
+
+    void anularReservacion(const string& _codigoReserva, Reservas**& reservas, int &totalReservas, Huesped** huespedes, int totalHuespedes);
 
 };
 
