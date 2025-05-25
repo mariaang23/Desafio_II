@@ -72,7 +72,9 @@ void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas**& reservaciones,
     }
 }
 
-void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes, Reservas**& reservaciones, int& totalReservas){
+void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes,
+                        Reservas**& reservaciones, int& totalReservas,
+                        Alojamiento** alojamientos, int totalAlojamientos){
     bool exit = false;
     while (!exit){
         cout << "------------------------------" << endl;
@@ -81,8 +83,13 @@ void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHu
         cout << "1. Reservar alojamiento\n2. Anular reservacion\n3. Volver al menu principal\n";
         int opc = intValidation(1, 3);
         if (opc == 1) {
-            //reservarAlojamiento();
-            int a = 0;
+            string fechaEntrada;
+            int cantNoches;
+            cout << "Ingrese fecha de entrada (dd/mm/aaaa): ";
+            cin >> fechaEntrada;
+            cout << "Ingrese cantidad de noches: ";
+            cin >> cantNoches;
+            huespedActual->reservarAlojamiento(reservaciones, totalReservas, huespedActual, alojamientos, totalAlojamientos, fechaEntrada, cantNoches);
         }
         else if (opc == 2) {
             string codReservaEliminar;

@@ -6,14 +6,13 @@
 #include <sstream>
 using namespace std;
 
-Reservas::Reservas(const string& _codigoReserva, const string& _fechaEntrada, const string& _cantNoches, const string& _codigoAlojamiento,
+Reservas::Reservas(const string& _codigoReserva, const string& _fechaEntrada, int _cantNoches, const string& _codigoAlojamiento,
                    const string& _cedulaHuesped, const string& _metodoPago, const string& _fechaPago, const string& _monto, const string& _anotaciones)
     : codigoReserva(_codigoReserva), fechaEntrada(_fechaEntrada), cantNoches(_cantNoches), codigoAlojamiento(_codigoAlojamiento),
       alojamientoPtr(nullptr), cedulaHuesped(_cedulaHuesped), metodoPago(_metodoPago), fechaPago(_fechaPago), monto(_monto), anotaciones(_anotaciones) {};
 
 Reservas::~Reservas() {
-    int noches = stoi(cantNoches);
-    for (int i = 0; i < noches; i++){
+    for (int i = 0; i < cantNoches; i++){
         delete fechasReservadas[i];
         fechasReservadas[i] = nullptr;
     }
@@ -38,7 +37,7 @@ const string& Reservas::getFechaEntrada() const{
     return fechaEntrada;
 }
 
-const string& Reservas::getCantNoches() const {
+int Reservas::getCantNoches() const {
     return cantNoches;
 }
 
@@ -83,11 +82,9 @@ void Reservas::enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamien
     }
 }
 
-float Reservas::calcularMonto(Alojamiento* _alojamientoPtr, string& _cantNoches) {
+float Reservas::calcularMonto(Alojamiento* _alojamientoPtr, int _cantNoches) {
     float preNoche = stof(_alojamientoPtr->getPrecio());
-    int cantidadNoches = stoi(_cantNoches);
-    float montoPagar = preNoche * cantidadNoches;
-    return montoPagar;
+    return preNoche * _cantNoches;
 }
 
 void Reservas::cargarReservas(Reservas**& reservaciones, int& totalReservas) {
@@ -109,18 +106,19 @@ void Reservas::cargarReservas(Reservas**& reservaciones, int& totalReservas) {
 
     while (getline(archivo, linea)) {
         stringstream frase(linea);
-        string codigoReserva_, codigoAlojamiento_, cedulaHuesped_, fechaEntrada_, cantNoches_, metodoPago_, fechaPago_, monto_, anotaciones_;
+        string codigoReserva_, codigoAlojamiento_, cedulaHuesped_, fechaEntrada_, cantNochesStr, metodoPago_, fechaPago_, monto_, anotaciones_;
         getline(frase, codigoReserva_, ';');
         getline(frase, codigoAlojamiento_, ';');
         getline(frase, cedulaHuesped_, ';');
         getline(frase, fechaEntrada_, ';');
-        getline(frase, cantNoches_, ';');
+        getline(frase, cantNochesStr, ';');
         getline(frase, metodoPago_, ';');
         getline(frase, fechaPago_, ';');
         getline(frase, monto_, ';');
         getline(frase, anotaciones_, ';');
 
-        Reservas* nuevaReserva = new Reservas(codigoReserva_, fechaEntrada_, cantNoches_, codigoAlojamiento_, cedulaHuesped_, metodoPago_, fechaPago_, monto_, anotaciones_);
+        int cantNochesInt = stoi(cantNochesStr);
+        Reservas* nuevaReserva = new Reservas(codigoReserva_, fechaEntrada_, cantNochesInt, codigoAlojamiento_, cedulaHuesped_, metodoPago_, fechaPago_, monto_, anotaciones_);
         reservaciones[i++] = nuevaReserva;
     }
 
@@ -143,43 +141,15 @@ void Reservas::mostrarReserva() const {
 }
 
 void Reservas::asociarFechasReservadas() {
-    int noches = stoi(cantNoches);
-    string fechaStr = fechaEntrada + '/';
-    int partes[3] = {0, 0, 0};
-    int parteActual = 0;
-    string subStrFec = "";
+    Fecha inicio = Fecha::fromString(fechaEntrada);
 
-    for (char c : fechaStr) {
-        if (c == '/') {
-            if (parteActual < 3) {
-                if (subStrFec.empty()) {
-                    cout << "Error: subStrFec esta vacío antes de la conversión a int.\n";
-                    return;
-                }
-                partes[parteActual++] = stoi(subStrFec);
-                subStrFec = "";
-            }
-        } else {
-            subStrFec += c;
-        }
-    }
+    fechasReservadas = new Fecha*[cantNoches];
 
-    Fecha inicio(partes[0], partes[1], partes[2]);
-
-    fechasReservadas = new Fecha*[noches];
-
-    for (int i = 0; i < noches; i++) {
-        fechasReservadas[i] = new Fecha(inicio + i);
+    for (int i = 0; i < cantNoches; i++) {
+        fechasReservadas[i] = new Fecha(inicio + i);  // Asumiendo que operator+ está definido
     }
 }
 
-void Reservas::mostrarFechasReservadas() const {
-    cout << "Fechas reservadas para la reserva " << codigoReserva << endl;
-    for (int i = 0; i < stoi(cantNoches); ++i) {
-        fechasReservadas[i]->imprimir();
-        cout << endl;
-    }
-}
 
 void Reservas::guardarReservasActivasArchivo(Reservas**& reservas, int& totalReservas, const string& archivo){
     ofstream out(archivo, ios::trunc);
@@ -194,7 +164,7 @@ void Reservas::guardarReservasActivasArchivo(Reservas**& reservas, int& totalRes
                 << reservas[i]->getCodigoAlojamiento() << ";"
                 << reservas[i]->getCedulaHuesped() << ";"
                 << reservas[i]->getFechaEntrada() << ";"
-                << reservas[i]->getCantNoches() << ";"
+                << to_string(reservas[i]->getCantNoches()) << ";"
                 << reservas[i]->getMetodoPago() << ";"
                 << reservas[i]->getFechaPago() << ";"
                 << reservas[i]->getMonto() << ";"

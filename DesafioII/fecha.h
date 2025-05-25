@@ -1,5 +1,8 @@
 #ifndef FECHA_H
 #define FECHA_H
+#include <iostream>
+
+
 
 class Fecha
 {
@@ -24,6 +27,7 @@ public:
 
     void imprimirConDia() const;
     void imprimir() const;
+    static Fecha fromString(const std::string& fechaStr);
 
 };
 

@@ -16,7 +16,9 @@ char charValidation(const string& mensajeStr);
 
 void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas **&reservaciones, int &totalReservas, Huesped**& huespedes, int &totalHuespedes);
 
-void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes, Reservas**& reservaciones, int& totalReservas);
+void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes,
+                        Reservas**& reservaciones, int& totalReservas,
+                        Alojamiento** alojamientos, int totalAlojamientos);
 
 void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamientos,
                                    Reservas** reservaciones, int totalReservas);

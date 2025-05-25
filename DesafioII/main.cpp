@@ -72,7 +72,7 @@ int main()
             for (int i = 0; i < totalHuespedes; i++) {
                 if ((huespedes[i]->getCedulaHuesped() == id) && (huespedes[i]->getClaveHuesped() == key)) {
                     Huesped* huespedActual = huespedes[i];
-                    mostrarMenuHuesped(huespedActual, huespedes, totalHuespedes, reservaciones, totalReservas);
+                    mostrarMenuHuesped(huespedActual, huespedes, totalHuespedes, reservaciones, totalReservas, alojamientos, totalAlojamientos);
                     loginExitoso = true;
                     break;
                 }

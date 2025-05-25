@@ -1,5 +1,6 @@
 #include <iostream>
 #include "fecha.h"
+using namespace std;
 
 // Función interna para verificar si el año es bisiesto
 bool Fecha::esBisiesto() const {
@@ -128,4 +129,28 @@ void Fecha::imprimir() const {
     }
 
     std::cout << dia << " de " << nombresMeses[mes - 1] << " del " << anio <<std::endl;
+}
+
+Fecha Fecha::fromString(const std::string& fechaStr) {
+    int partes[3] = {0, 0, 0};  // dd, mm, aaaa
+    int parteActual = 0;
+    string subStrFec = "";
+
+    string fechaConSlash = fechaStr + '/';  // Para procesar la última parte igual que las otras
+
+    for (char c : fechaConSlash) {
+        if (c == '/') {
+            if (subStrFec.empty()) {
+                cerr << "Error: subStrFec está vacío antes de la conversión a int.\n";
+                return Fecha(0, 0, 0);  // Valor por defecto en caso de error
+            }
+            partes[parteActual++] = stoi(subStrFec);
+            subStrFec = "";
+            if (parteActual >= 3) break;
+        } else {
+            subStrFec += c;
+        }
+    }
+
+    return Fecha(partes[0], partes[1], partes[2]);
 }
