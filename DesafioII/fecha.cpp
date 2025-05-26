@@ -154,3 +154,14 @@ Fecha Fecha::fromString(const std::string& fechaStr) {
 
     return Fecha(partes[0], partes[1], partes[2]);
 }
+
+string Fecha::aString() const {
+    // Asegúrate de validar antes de construir el string
+    if (!esValida()) return "Fecha inválida";
+
+    string diaStr = (dia < 10 ? "0" : "") + to_string(dia);
+    string mesStr = (mes < 10 ? "0" : "") + to_string(mes);
+    string anioStr = to_string(anio);
+
+    return diaStr + "/" + mesStr + "/" + anioStr;
+}

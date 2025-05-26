@@ -18,7 +18,7 @@ void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas **&reservaciones,
 
 void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes,
                         Reservas**& reservaciones, int& totalReservas,
-                        Alojamiento** alojamientos, int totalAlojamientos);
+                        Alojamiento** alojamientos, int totalAlojamientos, Anfitrion **anfitriones, int totalAnfitriones);
 
 void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamientos,
                                    Reservas** reservaciones, int totalReservas);

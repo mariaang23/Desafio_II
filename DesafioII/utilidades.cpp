@@ -1,6 +1,11 @@
 #include "utilidades.h"
+#include "fecha.h"
+#include "anfitrion.h"
+#include "alojamiento.h"
+#include "huesped.h"
 #include <iostream>
-#include <huesped.h>
+#include <fstream>
+#include <sstream>
 using namespace std;
 
 bool rangeValidation(int numero, int intIni, int intFin){
@@ -74,7 +79,7 @@ void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas**& reservaciones,
 
 void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes,
                         Reservas**& reservaciones, int& totalReservas,
-                        Alojamiento** alojamientos, int totalAlojamientos){
+                        Alojamiento** alojamientos, int totalAlojamientos, Anfitrion** anfitriones, int totalAnfitriones){
     bool exit = false;
     while (!exit){
         cout << "------------------------------" << endl;
@@ -83,13 +88,7 @@ void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHu
         cout << "1. Reservar alojamiento\n2. Anular reservacion\n3. Volver al menu principal\n";
         int opc = intValidation(1, 3);
         if (opc == 1) {
-            string fechaEntrada;
-            int cantNoches;
-            cout << "Ingrese fecha de entrada (dd/mm/aaaa): ";
-            cin >> fechaEntrada;
-            cout << "Ingrese cantidad de noches: ";
-            cin >> cantNoches;
-            huespedActual->reservarAlojamiento(reservaciones, totalReservas, huespedActual, alojamientos, totalAlojamientos, fechaEntrada, cantNoches);
+            huespedActual->reservarAlojamiento(alojamientos,totalAlojamientos,anfitriones,totalAnfitriones,reservaciones,totalReservas);
         }
         else if (opc == 2) {
             string codReservaEliminar;

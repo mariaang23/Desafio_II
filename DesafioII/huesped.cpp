@@ -2,6 +2,8 @@
 #include "reservas.h"
 #include "utilidades.h"
 #include "alojamiento.h"
+#include "anfitrion.h"
+#include "fecha.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -230,32 +232,229 @@ void Huesped::liberarReservasHuesped(const string& _codigoReserva) {
     codigosReservas = codigoTotal;
 }
 
-void reservarAlojamiento(Reservas**& reservas, int& totalReservas,
-                         Huesped* huespedActual,
-                         Alojamiento** alojamientos, int totalAlojamientos,
-                         const string& fechaEntrada, int cantNoches){
+void Huesped::reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamientos,
+                                  Anfitrion** anfitriones, int totalAnfitriones, Reservas ** reservas, int totalReservas) {
 
     cout << "\n----------Metodo de Busqueda----------\n";
     cout << "1. Buscar por costo maximo por noche o por puntuacion minima anfitrion o ambos\n";
     cout << "2. Buscar por codigo de alojamiento\n";
 
     int opcionBusqueda = intValidation(1,2);
-    Alojamiento* alojamientoSeleccionado = nullptr;
 
-    if (opcionBusqueda == 1){
-        //Implementar codigo
-    }
-    else{
-        //Busqueda por codigo de alojamiento
-        string codigoAlojIngresado;
-        cout << "Ingrese el codigo del alojamiento que desea reservar: " << endl;
-        cin >> codigoAlojIngresado;
+    if(opcionBusqueda == 1){
 
-        //Busqueda del codigo de alojamiento encada objeto de la clase alojamiento
+        string fechaStr, municipio;
+        int cantNoches;
+
+        cout << "Ingrese la fecha de entrada (dd/mm/aaaa): ";
+        getline(cin, fechaStr);
+        Fecha fechaEntrada = Fecha::fromString(fechaStr);
+
+        if (!fechaEntrada.esValida()) {
+            cout << "Fecha invalida.\n Vuelva a intentarlo. /n";
+            return;
+        }
+
+        cout << "Ingrese la cantidad de noches: ";
+        cin >> cantNoches;
+        cin.ignore();
+
+        cout << "Ingrese el municipio destino: ";
+        getline(cin, municipio);
+
+        // Filtro opcional
+        cout << "\n¿Desea aplicar algun filtro?\n";
+        cout << "1. Costo maximo\n2. Puntuacion minima del anfitrion\n3. Ambos\n4. Ninguno\nOpcion: ";
+        int opcionFiltro;
+        cin >> opcionFiltro;
+
+        float costoMax = 0;
+        float puntuacionMin = 0;
+
+        if (opcionFiltro == 1 || opcionFiltro == 3) {
+            cout << "Ingrese el costo maximo por noche: ";
+            cin >> costoMax;
+        }
+
+        if (opcionFiltro == 2 || opcionFiltro == 3) {
+            cout << "Ingrese la puntuacion minima del anfitrion (1.0 a 5.0): ";
+            cin >> puntuacionMin;
+        }
+
+        // Mostrar alojamientos disponibles con filtros
+        cout << "\n--- Alojamientos Disponibles ---\n";
+
+        int indexAloj =0;
+        bool algunoMostrado = false;
+        for (int i = 0; i < totalAlojamientos; ++i) {
+            indexAloj = i;
+            Alojamiento* aloj = alojamientos[i];
+            string municipioAloj = aloj->getMunicipio();
+
+            if (municipioAloj != municipio) {
+                // Si el municipio no coincide, no se muestra este alojamiento
+                continue;//se sale y va a iterar sobre el siguiente
+            }
+
+            string fechaEntradaStr = fechaEntrada.aString();
+            float precio = stof(aloj->getPrecio());
+            //buscar el anfitrion
+            string codigoAloj = aloj->getCodigoAlojamiento();
+            Anfitrion* anfitrionAloj = nullptr;
+            for (int j = 0; j < totalAnfitriones; ++j) {
+                if (anfitriones[j]->poseeAlojamiento(codigoAloj)) {
+                    if (!alojamientos[i]->estaDisponible(fechaEntradaStr, cantNoches, reservas, totalReservas)){
+                        cout << "\nEl alojamiento no esta disponible para la fecha y noches indicadas\n";
+                        return;
+                    }
+                    aloj = alojamientos[i];
+                    break;
+                }
+            }
+
+            bool pasaFiltroCosto = true;
+            bool pasaFiltroPuntuacion = true;
+
+            //si el huesped pidio que se hiciera el filtro por medio del
+            //costo y por medio de la puntuacion
+            if (opcionFiltro == 1 || opcionFiltro == 3) {
+                //si el precio del alojamiento es menor al costo ingresado max
+                pasaFiltroCosto = (precio <= costoMax);
+            }
+
+            if (opcionFiltro == 2 || opcionFiltro == 3) {
+                //si la puntuacion del anfitrionAloj es mayor a la ingresada
+                pasaFiltroPuntuacion = (stof(anfitrionAloj->getPuntuacion()) >= puntuacionMin);
+            }
+
+            if (pasaFiltroCosto && pasaFiltroPuntuacion) {
+                // Mostrar alojamiento, cumple todos los filtros
+                cout << indexAloj<<".  " << aloj->getNombre() << " (Codigo: " << aloj->getCodigoAlojamiento()
+                     << ") - $" << precio << "/noche, Puntuacion: " << anfitrionAloj->getPuntuacion() << "\n";
+            }
+
+
+            cout << indexAloj<<".  " << aloj->getNombre() << " (Codigo: " << aloj->getCodigoAlojamiento() << ") - $"
+                 << precio << "/noche, Puntuacion: " << anfitrionAloj->getPuntuacion() << "\n";
+            algunoMostrado = true;
+        }
+
+        //escoger alojamiento
+        int opcion = 0,opcionNotas;
+        string notasHuesped = "";
+        cout <<"/nSeleccione el alojamiento que desee segun su indice: ";
+        cin >> opcion;
+
+        cout << "--- Notas --- /n"
+                "1. Agregar anotaciones. /n"
+                "2. Realizar la reserva. /n"
+                "Seleccione una opcion: ";
+        cin >> opcionNotas;
+
+        //para anotaciones
+        bool notasExitoso = false;
+        while (opcionNotas == 1 && !notasExitoso) {
+            cout << "\nIngrese anotaciones: (Limite de 1000 caracteres)/n" << endl;
+            cin.ignore();
+            getline(cin, notasHuesped);
+
+            if (notasHuesped.size() > 1000) {
+                cout << "Excede el limite de caracteres./n Intente nuevamente.\n";
+            } else {
+                notasExitoso = true;
+            }
+        }
+
+        // obtener metodo de pago
+        int opMetodo;
+        string metodoPago = "";
+        bool metodoExitoso = false;
+
+        while (!metodoExitoso) {
+            cout << "\n--- Metodo de pago ---\n"
+                    "1. PSE\n"
+                    "2. Tarjeta de Credito\n"
+                    "Seleccione una opcion: ";
+            cin >> opMetodo;
+
+            if (opMetodo == 1) {
+                metodoPago = "PSE";
+                metodoExitoso = true;
+            } else if (opMetodo == 2) {
+                metodoPago = "Tarjeta de Credito";
+                metodoExitoso = true;
+            } else {
+                cout << "Opción invalida.\nIntente nuevamente.\n";
+            }
+        }
+
+        Alojamiento* alojamientoSeleccionado = alojamientos[opcion];
+
+        // Generar codigo automatico de la reserva
+        string codigoNuevaReserva = "R" + to_string(totalReservas + 1);
+
+        //datos para crear la nueva reserva
+        string codigoAlojamiento = alojamientoSeleccionado->getCodigoAlojamiento();
+        float precioPorNoche = stof(alojamientoSeleccionado->getPrecio());
+        float montoCalculado = precioPorNoche * cantNoches;
+        string montoStr = to_string(montoCalculado);
+        string cedulaHuesped = getCedulaHuesped();
+        string fechaEntradaStr = fechaEntrada.aString();
+        Fecha fechaPago = fechaEntrada + cantNoches;
+        string fechaPagoStr = fechaPago.aString();
+
+
+        Reservas* nuevaReserva = new Reservas(codigoNuevaReserva, fechaEntradaStr, cantNoches,codigoAlojamiento,
+                                              cedulaHuesped,metodoPago,fechaPagoStr,montoStr,notasHuesped);
+
+        nuevaReserva->setAlojamientoPtr(alojamientoSeleccionado);
+        nuevaReserva->asociarFechasReservadas();
+
+        // Agregar las reservas al arreglo
+        Reservas** nuevasReservas = new Reservas*[totalReservas + 1];
+        for (int i = 0; i < totalReservas; i++) {
+            nuevasReservas[i] = reservas[i];
+        }
+        nuevasReservas[totalReservas] = nuevaReserva;
+        delete[] reservas;
+        reservas = nuevasReservas;
+        totalReservas++;
+
+        cout <<"\nReserva creada exitosamente.\n";
+
+        nuevaReserva->mostrarComprobante();
+
+    }else{
+
+        //Ingreso por codigo
+        string codigoAloj = "";
+        cout << "/nIngrese codigo de alojamiento: ";
+        getline(cin, codigoAloj);
+
+        //pedir fecha y noches
+        string fechaStr;
+        int cantNoches;
+
+        cout << "Ingrese la fecha de entrada (dd/mm/aaaa): ";
+        getline(cin, fechaStr);
+        Fecha fechaEntrada = Fecha::fromString(fechaStr);
+
+        if (!fechaEntrada.esValida()) {
+            cout << "Fecha invalida.\n Vuelva a intentarlo. /n";
+            return;
+        }
+
+        cout << "Ingrese la cantidad de noches: ";
+        cin >> cantNoches;
+        cin.ignore();
+
+        string fechaEntradaStr = fechaEntrada.aString();
+        //seleccionar alojamiento
+        Alojamiento* alojamientoSeleccionado = nullptr;
         for (int i = 0; i < totalAlojamientos; i++){
-            if (alojamientos[i]->getCodigoAlojamiento() == codigoAlojIngresado){
-                if (!alojamientos[i]->estaDisponible(fechaEntrada, cantNoches, reservas, totalReservas)){
-                    cout << "\nEl alojamiento no está disponible para la fecha y noches indicadas\n";
+            if (alojamientos[i]->getCodigoAlojamiento() == codigoAloj){
+                if (!alojamientos[i]->estaDisponible(fechaEntradaStr, cantNoches, reservas, totalReservas)){
+                    cout << "\nEl alojamiento no esta disponible para la fecha y noches indicadas\n";
                     return;
                 }
                 alojamientoSeleccionado = alojamientos[i];
@@ -266,34 +465,87 @@ void reservarAlojamiento(Reservas**& reservas, int& totalReservas,
             cout << "\nNo se encontro un alojamiento con el codigo ingresado\n";
             return;
         }
+
+
+        //si desea agregar notas
+        int opcionNotas;
+        string notasHuesped = "";
+
+        cout << "--- Notas --- /n"
+                "1. Agregar anotaciones. /n"
+                "2. Realizar la reserva. /n"
+                "Seleccione una opcion: ";
+        cin >> opcionNotas;
+
+        bool notasExitoso = false;
+        while (opcionNotas == 1 && !notasExitoso) {
+            cout << "\nIngrese anotaciones: (Limite de 1000 caracteres)/n" << endl;
+            cin.ignore();
+            getline(cin, notasHuesped);
+
+            if (notasHuesped.size() > 1000) {
+                cout << "Excede el limite de caracteres./n Intente nuevamente.\n";
+            } else {
+                notasExitoso = true;
+            }
+        }
+
+        // obtener metodo de pago
+        int opMetodo;
+        string metodoPago = "";
+        bool metodoExitoso = false;
+
+        while (!metodoExitoso) {
+            cout << "\n--- Metodo de pago ---\n"
+                    "1. PSE\n"
+                    "2. Tarjeta de Credito\n"
+                    "Seleccione una opcion: ";
+            cin >> opMetodo;
+
+            if (opMetodo == 1) {
+                metodoPago = "PSE";
+                metodoExitoso = true;
+            } else if (opMetodo == 2) {
+                metodoPago = "Tarjeta de Credito";
+                metodoExitoso = true;
+            } else {
+                cout << "Opción invalida.\nIntente nuevamente.\n";
+            }
+        }
+
+
+        // Generar codigo automatico de la reserva
+        string codigoNuevaReserva = "R" + to_string(totalReservas + 1);
+
+        //datos para crear la nueva reserva
+        string codigoAlojamiento = alojamientoSeleccionado->getCodigoAlojamiento();
+        float precioPorNoche = stof(alojamientoSeleccionado->getPrecio());
+        float montoCalculado = precioPorNoche * cantNoches;
+        string montoStr = to_string(montoCalculado);
+        string cedulaHuesped = getCedulaHuesped();
+        Fecha fechaPago = fechaEntrada + cantNoches;
+        string fechaPagoStr = fechaPago.aString();
+
+
+        Reservas* nuevaReserva = new Reservas(codigoNuevaReserva, fechaEntradaStr, cantNoches,codigoAlojamiento,
+                                              cedulaHuesped,metodoPago,fechaPagoStr,montoStr,notasHuesped);
+
+        nuevaReserva->setAlojamientoPtr(alojamientoSeleccionado);
+        nuevaReserva->asociarFechasReservadas();
+
+        // Agregar las reservas al arreglo
+        Reservas** nuevasReservas = new Reservas*[totalReservas + 1];
+        for (int i = 0; i < totalReservas; i++) {
+            nuevasReservas[i] = reservas[i];
+        }
+        nuevasReservas[totalReservas] = nuevaReserva;
+        delete[] reservas;
+        reservas = nuevasReservas;
+        totalReservas++;
+
+        cout <<"\nReserva creada exitosamente.\n";
+
+        nuevaReserva->mostrarComprobante();
     }
-
-    // Generar codigo automatico de la reserva
-    string codigoNuevaReserva = "R" + to_string(totalReservas + 1);
-
-    float precioPorNoche = stof(alojamientoSeleccionado->getPrecio());
-    float montoCalculado = precioPorNoche * cantNoches;
-
-    Reservas* nuevaReserva = new Reservas(codigoNuevaReserva, fechaEntrada, cantNoches, alojamientoSeleccionado->getCodigoAlojamiento(),
-                                                                                        huespedActual->getCedulaHuesped(), to_string(montoCalculado));
-
-    nuevaReserva->setAlojamientoPtr(alojamientoSeleccionado);
-    nuevaReserva->asociarFechasReservadas();
-
-    // Agregar las reservas al arreglo
-    Reservas** nuevasReservas = new Reservas*[totalReservas + 1];
-    for (int i = 0; i < totalReservas; i++) {
-        nuevasReservas[i] = reservas[i];
-    }
-    nuevasReservas[totalReservas] = nuevaReserva;
-    delete[] reservas;
-    reservas = nuevasReservas;
-    totalReservas++;
-
-    cout <<"\nReserva creada exitosamente\n";
-    nuevaReserva->mostrarReserva();
-
-
-
 }
 
