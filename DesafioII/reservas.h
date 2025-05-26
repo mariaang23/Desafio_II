@@ -53,9 +53,10 @@ public:
 
     void enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos);
 
-    float calcularMonto(Alojamiento* _alojamientoPtr, int _cantNoches);
-
     static void guardarReservasActivasArchivo(Reservas **&reservas, int &totalReservas, const string& archivo);
+
+    void mostrarComprobante() const;
+
 };
 #endif // RESERVAS_H
 

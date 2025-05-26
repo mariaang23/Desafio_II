@@ -82,11 +82,6 @@ void Reservas::enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamien
     }
 }
 
-float Reservas::calcularMonto(Alojamiento* _alojamientoPtr, int _cantNoches) {
-    float preNoche = stof(_alojamientoPtr->getPrecio());
-    return preNoche * _cantNoches;
-}
-
 void Reservas::cargarReservas(Reservas**& reservaciones, int& totalReservas) {
     ifstream archivo("ReservasActivas.txt");
     if (!archivo.is_open()) {
@@ -175,3 +170,20 @@ void Reservas::guardarReservasActivasArchivo(Reservas**& reservas, int& totalRes
     out.close();
 }
 
+void Reservas::mostrarComprobante() const {
+    Fecha fechaInicio = Fecha::fromString(fechaEntrada);
+
+    int noches = cantNoches;
+    Fecha fechaFin = fechaInicio + noches;
+
+    cout << "\n========== COMPROBANTE DE RESERVA ==========\n";
+    cout << "Código de Reserva:     " << codigoReserva << endl;
+    cout << "Código de Alojamiento: " << codigoAlojamiento << endl;
+    cout << "Cédula del Huésped:    " << cedulaHuesped << endl;
+    cout << "Fecha de Inicio:       ";
+    fechaInicio.imprimir();
+    cout << "Fecha de Finalización: ";
+    fechaFin.imprimir();
+    cout << "Monto Total:           $" << monto << endl;
+    cout << "============================================\n";
+}

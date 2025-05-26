@@ -4,7 +4,7 @@
 #include <string>
 #include "alojamiento.h"
 #include "reservas.h"
-#include "huesped.h"
+class Huesped;
 
 using namespace std;
 
@@ -36,6 +36,7 @@ public:
 
     void anularReservacion(const string& _codigoReserva, Reservas**& reservas, int &totalReservas, Huesped** huespedes, int totalHuespedes);
 
+    bool poseeAlojamiento(const string& codigoAloj) const;
 };
 
 #endif // ANFITRION_H

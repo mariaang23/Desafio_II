@@ -1,8 +1,10 @@
 #ifndef HUESPED_H
 #define HUESPED_H
 #include "reservas.h"
+#include "anfitrion.h"
 #include <string>
 
+class Anfitrion;
 using namespace std;
 
 class Huesped
@@ -28,10 +30,11 @@ public:
     const string& getPuntuacion() const;
     const string& getCodigosReservas() const;
 
-    void reservarAlojamiento(Reservas**& reservas, int& totalReservas,
+    /*
+    void reservarAlojamientoPorCodigo(Reservas**& reservas, int& totalReservas,
                              Huesped* huespedActual,
                              Alojamiento** alojamientos, int totalAlojamientos,
-                             const string& fechaEntrada, int cantNoches);
+                             const string& fechaEntrada, int cantNoches);*/
 
     void anularReservacion(const string& _codigoReserva, Reservas**& reservaciones, int& totalReservas);
 
@@ -44,6 +47,9 @@ public:
     void mostrarReservasHuesped();
 
     static void guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const string &archivo);
+
+    void reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamientos,
+                            Anfitrion** anfitriones, int totalAnfitriones, Reservas ** reservas, int totalReservas);
 };
 
 #endif // HUESPED_H

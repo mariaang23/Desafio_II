@@ -128,19 +128,36 @@ void Anfitrion::mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int t
 }
 
 void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&reservas, int& totalReservas, Huesped** huespedes, int totalHuespedes) {
-    // Buscar la reserva y obtener la cedula del huesped
-    string cedulaHuespedActualizar = "";
+    // Buscar la reserva
     int indexReserva = -1;
+    string codigoAlojamientoReserva = "";
+    string cedulaHuespedActualizar = "";
+
     for (int i = 0; i < totalReservas; ++i) {
         if (reservas[i]->getCodigoReserva() == _codigoReserva) {
-            cedulaHuespedActualizar = reservas[i]->getCedulaHuesped();
             indexReserva = i;
+            codigoAlojamientoReserva = reservas[i]->getCodigoAlojamiento();
+            cedulaHuespedActualizar = reservas[i]->getCedulaHuesped();
             break;
         }
     }
 
     if (indexReserva == -1) {
         cout << "Reserva no encontrada.\n";
+        return;
+    }
+
+    // Verificar que la reserva este asociada a un alojamiento del anfitrion
+    bool perteneceAlAnfitrion = false;
+    for (int i = 0; i < cantidadAlojamientos; ++i) {
+        if (alojamientosAnfitrion[i]->getCodigoAlojamiento() == codigoAlojamientoReserva) {
+            perteneceAlAnfitrion = true;
+            break;
+        }
+    }
+
+    if (!perteneceAlAnfitrion) {
+        cout << "Error: No tienes permiso para eliminar esta reserva, ya que no pertenece a tus alojamientos.\n";
         return;
     }
 
@@ -153,15 +170,10 @@ void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&rese
         }
     }
 
-    if (huespedActualizado == nullptr) {
-        cout << "Huesped no encontrado.\n";
-        return;
-    }
-
-    // Eliminar reserva del huesped
+    // Eliminar reserva del huésped
     huespedActualizado->liberarReservasHuesped(_codigoReserva);
 
-    // Eliminar del arreglo global de reservas
+    // Eliminar del arreglo global
     delete reservas[indexReserva];
     for (int i = indexReserva; i < totalReservas - 1; ++i) {
         reservas[i] = reservas[i + 1];
@@ -169,9 +181,20 @@ void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&rese
     totalReservas--;
     reservas[totalReservas] = nullptr;
 
-    // Reasociar reservas locales del huesped
+    // Reasociar reservas locales al huésped
     huespedActualizado->asociarReservas(reservas, totalReservas);
 
+    // Guardar archivo actualizado de huéspedes
+    Huesped::guardarHuespedesArchivo(huespedes, totalHuespedes, "huespedes.txt");
 
-    cout << "Reserva " << _codigoReserva << " anulada correctamente.\n";
+    cout << "Reserva " << _codigoReserva << " eliminada exitosamente.\n";
+}
+
+bool Anfitrion::poseeAlojamiento(const string& codigoAloj) const {
+    for (int i = 0; i < cantidadAlojamientos; ++i) {
+        if (alojamientosAnfitrion[i]->getCodigoAlojamiento() == codigoAloj) {
+            return true;
+        }
+    }
+    return false;
 }
