@@ -30,12 +30,6 @@ public:
     const string& getPuntuacion() const;
     const string& getCodigosReservas() const;
 
-    /*
-    void reservarAlojamientoPorCodigo(Reservas**& reservas, int& totalReservas,
-                             Huesped* huespedActual,
-                             Alojamiento** alojamientos, int totalAlojamientos,
-                             const string& fechaEntrada, int cantNoches);*/
-
     void anularReservacion(const string& _codigoReserva, Reservas**& reservaciones, int& totalReservas);
 
     static void cargarHuespedes(Huesped**& huespedes, int& totalHuespedes);
@@ -48,6 +42,8 @@ public:
 
     void reservarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos,
                              Anfitrion** anfitriones, int totalAnfitriones, Reservas** &reservas, int &totalReservas);
+
+    void eliminarReservaHistorico(const string& codigoReserva);
 };
 
 #endif // HUESPED_H

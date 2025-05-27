@@ -28,32 +28,30 @@ public:
 
     ~Reservas();
 
-    const string& getCodigoReserva() const;
-    const string& getCodigoAlojamiento() const;
-    const string& getCedulaHuesped() const;
-    const string& getFechaEntrada() const;
-    int getCantNoches() const;
-    const string& getMetodoPago() const;
-    const string& getFechaPago() const;
-    const string &getMonto() const;
-    const string& getAnotaciones() const;
-    Fecha** getFechasReservadas() const;
+    const string& getCodigoReserva() const; //SE USA
+    const string& getCodigoAlojamiento() const; //SE USA
+    const string& getCedulaHuesped() const; //SE USA
+    const string& getFechaEntrada() const; //SE USA
+    int getCantNoches() const;  //SE USA
+    const string& getMetodoPago() const; //SE USA
+    const string& getFechaPago() const; //SE USA
+    const string &getMonto() const; //SE USA
+    const string& getAnotaciones() const; //SE USA
+    Fecha** getFechasReservadas() const; //SE USA
 
     void setFechasReservadas(Fecha** nuevasFechas);
-    void setAlojamientoPtr(Alojamiento* nuevoPtr);
+    void setAlojamientoPtr(Alojamiento* nuevoPtr); //SE USA
 
     Alojamiento* getAlojamiento() const;
-    void mostrarReservas() const;
-    void mostrarFechasReservadas() const;
-    void mostrarReserva() const;
+    void mostrarReserva() const; //SE USA
 
-    void asociarFechasReservadas();
+    void asociarFechasReservadas(); //SE USA
 
-    static void cargarReservas(Reservas**& reservaciones, int& totalReservas);
+    static void cargarReservas(Reservas**& reservaciones, int& totalReservas); //SE USA
 
-    void enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos);
+    void enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos); //SE USA
 
-    void mostrarComprobante() const;
+    void mostrarComprobante() const; //SE USA
 
 };
 #endif // RESERVAS_H

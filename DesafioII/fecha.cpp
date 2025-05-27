@@ -1,22 +1,38 @@
+/**
+ * @file fecha.cpp
+ * @brief Implementación de la clase Fecha, que representa una fecha y permite diversas operaciones como validación,
+ *        cálculo de día de la semana, suma de días, comparación y conversión a/desde cadenas de texto.
+ */
+
 #include <iostream>
 #include "fecha.h"
 using namespace std;
 
-// Función interna para verificar si el año es bisiesto
+/**
+ * @brief Verifica si el año de la fecha actual es bisiesto.
+ *
+ * @return true si el año es bisiesto, false en caso contrario.
+ */
 bool Fecha::esBisiesto() const {
     if (anio % 400 == 0) return true;
     if (anio % 100 == 0) return false;
     return anio % 4 == 0;
 }
 
-// Función interna para calcular el día de la semana
-// Retorna un entero 1=Lunes, 2=Martes, ..., 7=Domingo
+/**
+ * @brief Calcula el día de la semana para la fecha actual.
+ *
+ * Utiliza el algoritmo de Zeller. El resultado se ajusta para retornar:
+ * 1 = Lunes, 2 = Martes, ..., 7 = Domingo.
+ *
+ * @return int Día de la semana como número.
+ */
 int Fecha::calcularDiaSemana() const {
     int diaCalc = dia;
     int mesCalc = mes;
     int anioCalc = anio;
 
-    // Ajuste para enero y febrero según algoritmo de Zeller
+    // Ajuste para tratar enero y febrero como meses 13 y 14 del año anterior
     if (mesCalc < 3) {
         mesCalc += 12;
         anioCalc -= 1;
@@ -27,14 +43,19 @@ int Fecha::calcularDiaSemana() const {
 
     int h = (diaCalc + (13 * (mesCalc + 1)) / 5 + K + (K / 4) + (J / 4) + 5 * J) % 7;
 
-    // h = 0 -> sábado, 1 -> domingo, 2 -> lunes, ..., 6 -> viernes
-    // Queremos: 1=Lunes,...,7=Domingo
+    // Ajuste para retornar en el rango 1=Lunes,...,7=Domingo
     if (h == 0) return 6;      // Sábado
     else if (h == 1) return 7; // Domingo
     else return h - 1;         // Lunes a Viernes
 }
 
-// Devuelve el número de días que tiene un mes, considerando si es bisiesto
+/**
+ * @brief Retorna la cantidad de días que tiene un mes dado, considerando si el año es bisiesto.
+ *
+ * @param mes Número del mes (1 a 12).
+ * @param anio Año correspondiente.
+ * @return int Número de días del mes.
+ */
 int Fecha::diasDelMes(int mes, int anio) const {
     if (mes == 2) {
         return ( (anio % 4 == 0 && anio % 100 != 0) || (anio % 400 == 0) ) ? 29 : 28;
@@ -45,16 +66,23 @@ int Fecha::diasDelMes(int mes, int anio) const {
     return 31;
 }
 
-// Constructor con valores por defecto
+/**
+ * @brief Constructor de la clase Fecha.
+ *
+ * @param diaInicial Día de la fecha.
+ * @param mesInicial Mes de la fecha.
+ * @param anioInicial Año de la fecha.
+ */
 Fecha::Fecha(int diaInicial, int mesInicial, int anioInicial)
     : dia(diaInicial), mes(mesInicial), anio(anioInicial){}
 
-// Métodos getters
-int Fecha::getDia() const { return dia; }
-int Fecha::getMes() const { return mes; }
-int Fecha::getAnio() const { return anio; }
-
-// Método para validar la fecha
+/**
+ * @brief Verifica si la fecha actual es válida.
+ *
+ * Una fecha válida debe estar desde el año 1900 en adelante y tener día y mes válidos.
+ *
+ * @return true si la fecha es válida, false si no lo es.
+ */
 bool Fecha::esValida() const {
     if ((anio < 1900) || (mes < 1) || (mes > 12) || (dia < 1)) {
         return false;
@@ -65,18 +93,36 @@ bool Fecha::esValida() const {
     return true;
 }
 
-// Sobrecarga operador <
+/**
+ * @brief Operador de comparación '<' para fechas.
+ *
+ * Compara dos fechas cronológicamente.
+ *
+ * @param otraFecha Fecha contra la que se compara.
+ * @return true si la fecha actual es anterior a la otra, false en caso contrario.
+ */
 bool Fecha::operator<(const Fecha& otraFecha) const {
     if (anio != otraFecha.anio) return anio < otraFecha.anio;
     if (mes != otraFecha.mes) return mes < otraFecha.mes;
     return dia < otraFecha.dia;
 }
 
+/**
+ * @brief Operador de comparación de igualdad '==' para fechas.
+ *
+ * @param otraFecha Fecha a comparar.
+ * @return true si ambas fechas son iguales, false en caso contrario.
+ */
 bool Fecha::operator==(const Fecha& otraFecha) const {
     return (dia == otraFecha.dia && mes == otraFecha.mes && anio == otraFecha.anio);
 }
 
-// Sobrecarga operador +
+/**
+ * @brief Sobrecarga del operador '+' para sumar días a una fecha.
+ *
+ * @param diasASumar Número de días a sumar.
+ * @return Fecha resultante después de sumar los días.
+ */
 Fecha Fecha::operator+(int diasASumar) const {
     int d = dia;
     int m = mes;
@@ -85,13 +131,13 @@ Fecha Fecha::operator+(int diasASumar) const {
     // Sumar los días
     d += diasASumar;
 
-    // Ajustar la fecha si el día excede el número de días en el mes
+    // Ajustar el día y avanzar meses/años si es necesario
     while (d > diasDelMes(m, a)) {
         d -= diasDelMes(m, a);
         m++;
         if (m > 12) {
             m = 1;
-            a++;  // Incrementar el año si se pasa de diciembre
+            a++;   // Pasamos al siguiente año
         }
     }
 
@@ -99,9 +145,11 @@ Fecha Fecha::operator+(int diasASumar) const {
     return Fecha(d, m, a);
 }
 
-
-
-// Imprimir fecha con formato: "Lunes, 15 de Abril del 2025"
+/**
+ * @brief Imprime la fecha con el nombre del día y del mes.
+ *
+ * Ejemplo: "Lunes, 15 de Abril del 2025"
+ */
 void Fecha::imprimirConDia() const {
     const char* nombresDias[7] = {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"};
     const char* nombresMeses[12] = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -117,32 +165,24 @@ void Fecha::imprimirConDia() const {
     std::cout << nombresDias[indiceDia] << ", " << dia << " de " << nombresMeses[mes - 1] << " del " << anio << std::endl;
 }
 
-
-// Imprimir fecha simple: "15 de Abril del 2025"
-void Fecha::imprimir() const {
-    const char* nombresMeses[12] = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
-
-    if (!esValida()) {
-        std::cout << "\nFecha invalida\n";
-        return;
-    }
-
-    std::cout << dia << " de " << nombresMeses[mes - 1] << " del " << anio <<std::endl;
-}
-
+/**
+ * @brief Crea un objeto Fecha a partir de un string con formato "dd/mm/aaaa".
+ *
+ * @param fechaStr Cadena con la fecha.
+ * @return Fecha construida a partir del string, o una fecha inválida si hay error.
+ */
 Fecha Fecha::fromString(const std::string& fechaStr) {
-    int partes[3] = {0, 0, 0};  // dd, mm, aaaa
+    int partes[3] = {0, 0, 0};  // [día, mes, año]
     int parteActual = 0;
     string subStrFec = "";
 
-    string fechaConSlash = fechaStr + '/';  // Para procesar la última parte igual que las otras
+    string fechaConSlash = fechaStr + '/';  // Asegura el procesamiento del último valor
 
     for (char c : fechaConSlash) {
         if (c == '/') {
             if (subStrFec.empty()) {
                 cerr << "Error: subStrFec esta vacio antes de la conversion a int.\n";
-                return Fecha(0, 0, 0);  // Valor por defecto en caso de error
+                return Fecha(0, 0, 0);  // Fecha inválida
             }
             partes[parteActual++] = stoi(subStrFec);
             subStrFec = "";
@@ -155,6 +195,11 @@ Fecha Fecha::fromString(const std::string& fechaStr) {
     return Fecha(partes[0], partes[1], partes[2]);
 }
 
+/**
+ * @brief Convierte la fecha actual a un string en formato "dd/mm/aaaa".
+ *
+ * @return std::string Representación en texto de la fecha o mensaje de error si es inválida.
+ */
 string Fecha::aString() const {
     // Asegúrate de validar antes de construir el string
     if (!esValida()) return "Fecha invalida\n";

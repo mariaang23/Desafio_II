@@ -8,34 +8,39 @@
 
 using namespace std;
 
+// Validaciones básicas
 bool rangeValidation(int numero, int intIni, int intFin);
-
 int intValidation(int limInf, int limSup);
-
 char charValidation(const string& mensajeStr);
 
-void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas **&reservaciones, int &totalReservas, Huesped**& huespedes, int &totalHuespedes);
+// Menús principales
+void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas**& reservaciones, int& totalReservas,
+                          Huesped**& huespedes, int& totalHuespedes);
 
-void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes,
-                        Reservas**& reservaciones, int& totalReservas,
-                        Alojamiento** alojamientos, int totalAlojamientos, Anfitrion **anfitriones, int totalAnfitriones);
+void mostrarMenuHuesped(Huesped* huespedActual, Reservas**& reservaciones, int& totalReservas,
+                        Alojamiento** alojamientos, int totalAlojamientos,
+                        Anfitrion** anfitriones, int totalAnfitriones);
 
+// Utilidades de reserva
 void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamientos,
                                    Reservas** reservaciones, int totalReservas);
 
-void guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const string &archivo);
+void guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const string& archivo);
+void guardarReservasActivasArchivo(Reservas** reservas, int totalReservas, const string& archivo);
+void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas,
+                         Huesped** huespedes, int totalHuespedes, Fecha& fechaCorte);
 
-void guardarReservasActivasArchivo(Reservas **reservas, int totalReservas, const string& archivo);
-
+// Liberar arreglos de punteros
 template <typename T>
-void liberarArregloDePunteros(T**& arreglo, int& total){
+void liberarArregloDePunteros(T**& arreglo, int& total) {
     if (arreglo == nullptr) return;
 
     for (int i = 0; i < total; ++i) {
-        delete arreglo[i];  // Liberar el objeto
+        delete arreglo[i];
         arreglo[i] = nullptr;
     }
-    delete[] arreglo;       // Liberar el arreglo de punteros
+
+    delete[] arreglo;
     arreglo = nullptr;
     total = 0;
 }
