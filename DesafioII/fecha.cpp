@@ -56,7 +56,7 @@ int Fecha::getAnio() const { return anio; }
 
 // Método para validar la fecha
 bool Fecha::esValida() const {
-    if (anio < 1900 || mes < 1 || mes > 12 || dia < 1) {
+    if ((anio < 1900) || (mes < 1) || (mes > 12) || (dia < 1)) {
         return false;
     }
     if (dia > diasDelMes(mes, anio)) {
@@ -103,12 +103,12 @@ Fecha Fecha::operator+(int diasASumar) const {
 
 // Imprimir fecha con formato: "Lunes, 15 de Abril del 2025"
 void Fecha::imprimirConDia() const {
-    const char* nombresDias[7] = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
+    const char* nombresDias[7] = {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"};
     const char* nombresMeses[12] = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                                     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
 
     if (!esValida()) {
-        std::cout << "\nFecha inválida\n";
+        std::cout << "\nFecha invalida\n";
         return;
     }
 
@@ -124,7 +124,7 @@ void Fecha::imprimir() const {
                                     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
 
     if (!esValida()) {
-        std::cout << "\nFecha inválida\n";
+        std::cout << "\nFecha invalida\n";
         return;
     }
 
@@ -141,7 +141,7 @@ Fecha Fecha::fromString(const std::string& fechaStr) {
     for (char c : fechaConSlash) {
         if (c == '/') {
             if (subStrFec.empty()) {
-                cerr << "Error: subStrFec está vacío antes de la conversión a int.\n";
+                cerr << "Error: subStrFec esta vacio antes de la conversion a int.\n";
                 return Fecha(0, 0, 0);  // Valor por defecto en caso de error
             }
             partes[parteActual++] = stoi(subStrFec);
@@ -157,7 +157,7 @@ Fecha Fecha::fromString(const std::string& fechaStr) {
 
 string Fecha::aString() const {
     // Asegúrate de validar antes de construir el string
-    if (!esValida()) return "Fecha inválida";
+    if (!esValida()) return "Fecha invalida\n";
 
     string diaStr = (dia < 10 ? "0" : "") + to_string(dia);
     string mesStr = (mes < 10 ? "0" : "") + to_string(mes);

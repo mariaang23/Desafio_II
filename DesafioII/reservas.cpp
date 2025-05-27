@@ -145,31 +145,6 @@ void Reservas::asociarFechasReservadas() {
     }
 }
 
-
-void Reservas::guardarReservasActivasArchivo(Reservas**& reservas, int& totalReservas, const string& archivo){
-    ofstream out(archivo, ios::trunc);
-    if (!out.is_open()) {
-        cerr << "No se pudo abrir el archivo: " << archivo << endl;
-        return;
-    }
-
-    for (int i = 0; i < totalReservas; ++i) {
-        if (reservas[i] != nullptr){
-            out << reservas[i]->getCodigoReserva() << ";"
-                << reservas[i]->getCodigoAlojamiento() << ";"
-                << reservas[i]->getCedulaHuesped() << ";"
-                << reservas[i]->getFechaEntrada() << ";"
-                << to_string(reservas[i]->getCantNoches()) << ";"
-                << reservas[i]->getMetodoPago() << ";"
-                << reservas[i]->getFechaPago() << ";"
-                << reservas[i]->getMonto() << ";"
-                << reservas[i]->getAnotaciones() << endl;
-
-        }
-    }
-    out.close();
-}
-
 void Reservas::mostrarComprobante() const {
     Fecha fechaInicio = Fecha::fromString(fechaEntrada);
 
@@ -177,13 +152,13 @@ void Reservas::mostrarComprobante() const {
     Fecha fechaFin = fechaInicio + noches;
 
     cout << "\n========== COMPROBANTE DE RESERVA ==========\n";
-    cout << "Código de Reserva:     " << codigoReserva << endl;
-    cout << "Código de Alojamiento: " << codigoAlojamiento << endl;
-    cout << "Cédula del Huésped:    " << cedulaHuesped << endl;
+    cout << "Codigo de Reserva:     " << codigoReserva << endl;
+    cout << "Codigo de Alojamiento: " << codigoAlojamiento << endl;
+    cout << "Cedula del Huesped:    " << cedulaHuesped << endl;
     cout << "Fecha de Inicio:       ";
-    fechaInicio.imprimir();
-    cout << "Fecha de Finalización: ";
-    fechaFin.imprimir();
+    fechaInicio.imprimirConDia();
+    cout << "Fecha de Finalizacion: ";
+    fechaFin.imprimirConDia();
     cout << "Monto Total:           $" << monto << endl;
     cout << "============================================\n";
 }

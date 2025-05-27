@@ -9,7 +9,7 @@ using namespace std;
 
 Alojamiento::Alojamiento(const string& _codigo, const string& _nombre, const string& _nombreAnf,
                          const string& _departamento, const string& _municipio, const string& _tipo,
-                         const string& _direccion, const string& _precioStr, const string& _amenidades)
+                         const string& _direccion, const int &_precioStr, const string& _amenidades)
     : codigo(_codigo), nombre(_nombre), nombreAnf(_nombreAnf), departamento(_departamento), municipio(_municipio),
       tipo(_tipo), direccion(_direccion), precio(_precioStr), amenidades(_amenidades) {}
 
@@ -17,7 +17,7 @@ const string& Alojamiento::getCodigoAlojamiento() const {
     return codigo;
 }
 
-const string& Alojamiento::getPrecio() const {
+const int& Alojamiento::getPrecio() const {
     return precio;
 }
 
@@ -79,7 +79,8 @@ void Alojamiento::cargarAlojamientos(Alojamiento**& alojamientos, int& totalAloj
         getline(frase, direccion_, ';');
         getline(frase, precio_, ';');
         getline(frase, amenidades_);
-        Alojamiento* nuevoAlojamiento = new Alojamiento(codigo_, nombre_, nombreAnf_, departamento_, municipio_, tipo_, direccion_, precio_, amenidades_);
+        int precioInt_ = stoi(precio_);
+        Alojamiento* nuevoAlojamiento = new Alojamiento(codigo_, nombre_, nombreAnf_, departamento_, municipio_, tipo_, direccion_, precioInt_, amenidades_);
         alojamientos[i++] = nuevoAlojamiento;
     }
     archivo.close();
@@ -88,23 +89,50 @@ void Alojamiento::cargarAlojamientos(Alojamiento**& alojamientos, int& totalAloj
 
 bool Alojamiento::estaDisponible(const string& fechaEntrada, int cantNoches, Reservas** reservas, int totalReservas)
 {
+    bool solapa = false;
     Fecha fechaInicio = Fecha::fromString(fechaEntrada);
-    Fecha fechaFin = fechaInicio + cantNoches;
+    Fecha** fechasIngresadas = new Fecha*[cantNoches];
 
-    for (int i = 0; i < totalReservas; i++) {
-        if (reservas[i]->getAlojamiento() == this) {
-            Fecha reservaInicio = Fecha::fromString(reservas[i]->getFechaEntrada());
-            Fecha reservaFin = reservaInicio + reservas[i]->getCantNoches();
-
-            // Si se solapan las fechas, no está disponible
-            if (!(fechaFin < reservaInicio || reservaFin < fechaInicio)) {
-                return false;
-            }
-        }
+    for (int j = 0; j < cantNoches; j++) {
+        fechasIngresadas[j] = new Fecha(fechaInicio + j);
     }
 
-    return true; // si no se solapan las fechas
+    for (int i = 0; i < totalReservas && !solapa; i++) {
+        int cantidadExistente = reservas[i]->getCantNoches();
+        Fecha reservaInicio = Fecha::fromString(reservas[i]->getFechaEntrada());
+        Fecha** fechasExistentes = new Fecha*[cantidadExistente];
+
+        for (int j = 0; j < cantidadExistente; j++) {
+            fechasExistentes[j] = new Fecha(reservaInicio + j);
+        }
+
+        // Comparar todas las fechas entre la reserva y las nuevas fechas
+        for (int j = 0; j < cantNoches && !solapa; j++) {
+            for (int k = 0; k < cantidadExistente && !solapa; k++) {
+                if (*fechasIngresadas[j] == *fechasExistentes[k]) {  // Comparacion por contenido
+                    //si hay solapamiento el alojamiento no esta disponible
+                    solapa = true;
+                }
+            }
+        }
+
+        // Liberar memoria de fechasExistentes
+        for (int j = 0; j < cantidadExistente; j++) {
+            delete fechasExistentes[j];
+        }
+        delete[] fechasExistentes;
+    }
+
+    // Liberar memoria de fechasIngresadas
+    for (int j = 0; j < cantNoches; j++) {
+        delete fechasIngresadas[j];
+    }
+    delete[] fechasIngresadas;
+
+    //si no hay solapamiento el alojamiento esta disponible
+    return !solapa;
 }
+
 
 
 void guardarAlojamientos(Alojamiento** alojamientos, int total, const string& archivo) {

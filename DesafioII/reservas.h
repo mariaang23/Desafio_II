@@ -35,7 +35,7 @@ public:
     int getCantNoches() const;
     const string& getMetodoPago() const;
     const string& getFechaPago() const;
-    const string& getMonto() const;
+    const string &getMonto() const;
     const string& getAnotaciones() const;
     Fecha** getFechasReservadas() const;
 
@@ -52,8 +52,6 @@ public:
     static void cargarReservas(Reservas**& reservaciones, int& totalReservas);
 
     void enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos);
-
-    static void guardarReservasActivasArchivo(Reservas **&reservas, int &totalReservas, const string& archivo);
 
     void mostrarComprobante() const;
 

@@ -124,3 +124,48 @@ void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamie
     }
 }
 
+void guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const string &archivo){
+    ofstream out(archivo, ios::trunc);
+    if (!out.is_open()) {
+        cerr << "No se pudo abrir el archivo: " << archivo << endl;
+        return;
+    }
+
+    for (int i = 0; i < totalHuespedes; ++i) {
+        out << huespedes[i]->getCedulaHuesped() << ";"
+            << huespedes[i]->getClaveHuesped() << ";"
+            << huespedes[i]->getAntiguedad() << ";"
+            << huespedes[i]->getPuntuacion() << ";";
+
+        string codigos = huespedes[i]->getCodigosReservas();
+        if (!codigos.empty()){
+            out << codigos;
+        }
+        out << endl;
+    }
+
+    out.close();
+}
+void guardarReservasActivasArchivo(Reservas** reservas, int totalReservas, const string& archivo){
+    ofstream out(archivo, ios::trunc);
+    if (!out.is_open()) {
+        cerr << "No se pudo abrir el archivo: " << archivo << endl;
+        return;
+    }
+
+    for (int i = 0; i < totalReservas; ++i) {
+        if (reservas[i] != nullptr){
+            out << reservas[i]->getCodigoReserva() << ";"
+                << reservas[i]->getCodigoAlojamiento() << ";"
+                << reservas[i]->getCedulaHuesped() << ";"
+                << reservas[i]->getFechaEntrada() << ";"
+                << to_string(reservas[i]->getCantNoches()) << ";"
+                << reservas[i]->getMetodoPago() << ";"
+                << reservas[i]->getFechaPago() << ";"
+                << reservas[i]->getMonto() << ";"
+                << reservas[i]->getAnotaciones() << endl;
+
+        }
+    }
+    out.close();
+}

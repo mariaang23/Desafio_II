@@ -82,20 +82,20 @@ int main()
         if (!loginExitoso) {
             cout << "\nUsuario o clave incorrecta." << endl;
         }
-
+        cout << "Cantidad reservas: "<<totalReservas;
         string mensaje = "\n---- Seleccione la opcion que desee --- "
                          "\nS. Salir"
                          "\nV. Volver al inicio de sesion\n";
         char opcion = charValidation(mensaje);
 
         if (opcion == 's' || opcion == 'S') {
-            Huesped::guardarHuespedesArchivo(huespedes, totalHuespedes, "huespedes.txt");
-            Reservas::guardarReservasActivasArchivo(reservaciones, totalReservas, "ReservasActivas.txt");
-            cout << "\nHa salido del sistema" << endl;
+            guardarHuespedesArchivo(huespedes, totalHuespedes, "huespedes.txt");
+            guardarReservasActivasArchivo(reservaciones, totalReservas, "ReservasActivas.txt");
+            cout << "\nHa salido del sistema exitosamente." << endl;
             exitPpal = true;
         }
     }
-
+/*
     // Liberar memoria
     cout << "Liberando anfitriones..." << endl;
     liberarArregloDePunteros(anfitriones, totalAnfitriones);
@@ -106,6 +106,6 @@ int main()
     cout << "Liberando reservaciones..." << endl;
     liberarArregloDePunteros(reservaciones, totalReservas);
     cout << "Liberacion terminada." << endl;
-
+*/
     return 0;
 }
