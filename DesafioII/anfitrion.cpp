@@ -184,9 +184,6 @@ void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&rese
     // Reasociar reservas locales al huésped
     huespedActualizado->asociarReservas(reservas, totalReservas);
 
-    // Guardar archivo actualizado de huéspedes
-    Huesped::guardarHuespedesArchivo(huespedes, totalHuespedes, "huespedes.txt");
-
     cout << "Reserva " << _codigoReserva << " eliminada exitosamente.\n";
 }
 

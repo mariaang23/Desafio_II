@@ -23,6 +23,10 @@ void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHu
 void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamientos,
                                    Reservas** reservaciones, int totalReservas);
 
+void guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const string &archivo);
+
+void guardarReservasActivasArchivo(Reservas **reservas, int totalReservas, const string& archivo);
+
 template <typename T>
 void liberarArregloDePunteros(T**& arreglo, int& total){
     if (arreglo == nullptr) return;

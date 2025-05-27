@@ -46,10 +46,8 @@ public:
 
     void mostrarReservasHuesped();
 
-    static void guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const string &archivo);
-
-    void reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamientos,
-                            Anfitrion** anfitriones, int totalAnfitriones, Reservas ** reservas, int totalReservas);
+    void reservarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos,
+                             Anfitrion** anfitriones, int totalAnfitriones, Reservas** &reservas, int &totalReservas);
 };
 
 #endif // HUESPED_H
