@@ -183,20 +183,32 @@ void Huesped::liberarReservasHuesped(const string& _codigoReserva) {
     }
     reservasHuesped = nullptr;
 
-    // Actualizar codigos de las reservas correspondientes a huesped[i]
-    string codigo = "", codigoTotal = "";
-    for (size_t i = 0; i < codigosReservas.length(); i++){
-        if (codigosReservas[i] == ','){
-            codigo += codigosReservas[i];
-        }
-        else{
-            if (codigo != _codigoReserva){
-                codigoTotal += codigo + ',';
+    string codigoActual = "", nuevoCodigoReservas = "";
+
+    // Actualizar la cadena codigosReservas eliminando el codigo anulado
+    for (int i = 0; codigosReservas[i] != '\0'; i++) {
+        if (codigosReservas[i] != ',') {
+            codigoActual += codigosReservas[i];
+        } else {
+            if (codigoActual != _codigoReserva) {
+                if (!nuevoCodigoReservas.empty()) {
+                    nuevoCodigoReservas += ",";
+                }
+                nuevoCodigoReservas += codigoActual;
             }
-            codigo = "";
+            codigoActual = "";
         }
     }
-    codigosReservas = codigoTotal;
+
+    // Procesar el último código si el string no termina en coma
+    if (!codigoActual.empty() && codigoActual != _codigoReserva) {
+        if (!nuevoCodigoReservas.empty()) {
+            nuevoCodigoReservas += ",";
+        }
+        nuevoCodigoReservas += codigoActual;
+    }
+
+    codigosReservas = nuevoCodigoReservas;
 }
 
 void Huesped::reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamientos,
@@ -225,7 +237,7 @@ void Huesped::reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamient
         cout << "Ingrese la cantidad de noches: ";
         cin >> cantNoches;
 
-        cout << "(Omita espacios)\nIngrese el municipio destino: ";
+        cout << "\nIngrese el municipio destino: ";
         cin.ignore();
         getline(cin,municipio);
 
