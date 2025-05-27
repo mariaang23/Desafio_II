@@ -195,6 +195,7 @@ Fecha Fecha::fromString(const std::string& fechaStr) {
     return Fecha(partes[0], partes[1], partes[2]);
 }
 
+
 /**
  * @brief Convierte la fecha actual a un string en formato "dd/mm/aaaa".
  *

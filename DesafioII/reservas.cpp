@@ -256,6 +256,10 @@ void Reservas::asociarFechasReservadas() {
     }
 
     // Validar que la cantidad de noches sea válida
+    if (fechasReservadas != nullptr) {
+        // Ya asignado; no volver a asignar para evitar fugas
+        return;
+    }
     if (cantNoches <= 0 || cantNoches > 365) {
         cout << "asociarFechasReservadas: cantNoches invalido (" << cantNoches << ") en " << codigoReserva << endl;
         return;
@@ -270,6 +274,7 @@ void Reservas::asociarFechasReservadas() {
         fechasReservadas[i] = new Fecha(inicio + i);
     }
 }
+
 
 /**
  * @brief Muestra un comprobante de la reserva con detalles completos.

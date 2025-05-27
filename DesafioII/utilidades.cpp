@@ -27,6 +27,7 @@ using namespace std;
  * @return true si el número está dentro del rango [intIni, intFin], false en caso contrario.
  */
 bool rangeValidation(int numero, int intIni, int intFin){
+
     return (numero >= intIni && numero <= intFin); // Retorna true si 'numero' está entre 'intIni' y 'intFin' inclusive
 }
 
@@ -70,9 +71,9 @@ int intValidation(int limInf, int limSup){
  * @param mensajeStr Mensaje que se muestra para solicitar la entrada.
  * @return Carácter válido ingresado por el usuario.
  */
-char charValidation(const string& mensajeStr){
+char charValidation(const string& mensajeStr) {
     char opc;
-    while (true){
+    while (true) {
         cout << mensajeStr;
         cin >> opc;
 
@@ -87,6 +88,7 @@ char charValidation(const string& mensajeStr){
         }
     }
 }
+
 
 /**
  * @brief Muestra el menú para las acciones disponibles a un anfitrión.
@@ -351,7 +353,7 @@ void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas, Huespe
                          << r->getMonto() << ";"
                          << r->getAnotaciones() << endl;
 
-        delete r;    // Liberar la memoria de la reserva que ya se archiv
+        delete r;    // Liberar la memoria de la reserva que ya se archivó
     }
     archivoHistorico.close();
     delete[] reservasHistorico;  // Liberar el arreglo temporal de reservas para histórico
@@ -363,10 +365,12 @@ void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas, Huespe
             reservasActivas[nuevosActivos++] = reservasActivas[i];
         }
     }
+
     // Poner nullptr en las posiciones restantes después de compactar
     for (int i = nuevosActivos; i < totalReservas; i++) {
         reservasActivas[i] = nullptr;
     }
+
     // Actualizar el total de reservas activas para reflejar el nuevo tamaño
     totalReservas = nuevosActivos;
 
