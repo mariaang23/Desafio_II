@@ -195,3 +195,5 @@ bool Anfitrion::poseeAlojamiento(const string& codigoAloj) const {
     }
     return false;
 }
+
+
