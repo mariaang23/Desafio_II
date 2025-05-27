@@ -49,11 +49,6 @@ int Fecha::diasDelMes(int mes, int anio) const {
 Fecha::Fecha(int diaInicial, int mesInicial, int anioInicial)
     : dia(diaInicial), mes(mesInicial), anio(anioInicial){}
 
-// Métodos getters
-int Fecha::getDia() const { return dia; }
-int Fecha::getMes() const { return mes; }
-int Fecha::getAnio() const { return anio; }
-
 // Método para validar la fecha
 bool Fecha::esValida() const {
     if ((anio < 1900) || (mes < 1) || (mes > 12) || (dia < 1)) {
@@ -115,20 +110,6 @@ void Fecha::imprimirConDia() const {
     int indiceDia = calcularDiaSemana() - 1;  // Ajuste índice para array (0-based)
 
     std::cout << nombresDias[indiceDia] << ", " << dia << " de " << nombresMeses[mes - 1] << " del " << anio << std::endl;
-}
-
-
-// Imprimir fecha simple: "15 de Abril del 2025"
-void Fecha::imprimir() const {
-    const char* nombresMeses[12] = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
-
-    if (!esValida()) {
-        std::cout << "\nFecha invalida\n";
-        return;
-    }
-
-    std::cout << dia << " de " << nombresMeses[mes - 1] << " del " << anio <<std::endl;
 }
 
 Fecha Fecha::fromString(const std::string& fechaStr) {

@@ -9,17 +9,23 @@ using namespace std;
 Reservas::Reservas(const string& _codigoReserva, const string& _fechaEntrada, int _cantNoches, const string& _codigoAlojamiento,
                    const string& _cedulaHuesped, const string& _metodoPago, const string& _fechaPago, const string& _monto, const string& _anotaciones)
     : codigoReserva(_codigoReserva), fechaEntrada(_fechaEntrada), cantNoches(_cantNoches), codigoAlojamiento(_codigoAlojamiento),
-      alojamientoPtr(nullptr), cedulaHuesped(_cedulaHuesped), metodoPago(_metodoPago), fechaPago(_fechaPago), monto(_monto), anotaciones(_anotaciones) {};
+    alojamientoPtr(nullptr), cedulaHuesped(_cedulaHuesped), metodoPago(_metodoPago), fechaPago(_fechaPago), monto(_monto), anotaciones(_anotaciones), fechasReservadas(nullptr) {};
 
 Reservas::~Reservas() {
-    for (int i = 0; i < cantNoches; i++){
-        delete fechasReservadas[i];
-        fechasReservadas[i] = nullptr;
+    if (fechasReservadas != nullptr) {
+        if (cantNoches > 0 && cantNoches <= 365) {
+            for (int i = 0; i < cantNoches; ++i) {
+                delete fechasReservadas[i];
+                fechasReservadas[i] = nullptr;
+            }
+        }
+        delete[] fechasReservadas;
+        fechasReservadas = nullptr;
     }
-    delete[] fechasReservadas;
-    fechasReservadas = nullptr;
-    alojamientoPtr = nullptr;
+
+    alojamientoPtr = nullptr;  // Solo desvincular, no eliminar
 }
+
 
 const string& Reservas::getCodigoReserva() const {
     return codigoReserva;
@@ -65,7 +71,13 @@ Fecha** Reservas::getFechasReservadas() const {
     return fechasReservadas;
 }
 
-void Reservas::setFechasReservadas(Fecha ** nuevasFechas){
+void Reservas::setFechasReservadas(Fecha** nuevasFechas) {
+    if (fechasReservadas != nullptr) {
+        for (int i = 0; i < cantNoches; i++) {
+            delete fechasReservadas[i];
+        }
+        delete[] fechasReservadas;
+    }
     fechasReservadas = nuevasFechas;
 }
 
@@ -120,30 +132,29 @@ void Reservas::cargarReservas(Reservas**& reservaciones, int& totalReservas) {
     archivo.close();
 }
 
-void Reservas::mostrarReservas() const {
-    cout << "Código de reserva: " << codigoReserva << " - ";
-    cout << "Fecha de entrada: " << fechaEntrada << " - ";
-    cout << "Cantidad de noches: " << cantNoches << " - ";
-    cout << "Código de alojamiento: " << codigoAlojamiento << " - ";
-    cout << "Método de pago: " << metodoPago << " - ";
-    cout << "Fecha de pago: " << fechaPago << " - ";
-    cout << "Monto: " << monto << " - ";
-    cout << "Anotaciones: " << anotaciones << endl;
-}
-
 void Reservas::mostrarReserva() const {
     cout << "   - Reserva para fecha: " << fechaEntrada << ", cedula huesped: " << cedulaHuesped << endl;
 }
 
 void Reservas::asociarFechasReservadas() {
-    Fecha inicio = Fecha::fromString(fechaEntrada);
+    if (fechasReservadas != nullptr) {
+        // Ya asignado; no volver a asignar para evitar fugas
+        return;
+    }
 
+    if (cantNoches <= 0 || cantNoches > 365) {
+        cout << "asociarFechasReservadas: cantNoches invalido (" << cantNoches << ") en " << codigoReserva << endl;
+        return;
+    }
+
+    Fecha inicio = Fecha::fromString(fechaEntrada);
     fechasReservadas = new Fecha*[cantNoches];
 
     for (int i = 0; i < cantNoches; i++) {
-        fechasReservadas[i] = new Fecha(inicio + i);  // Asumiendo que operator+ está definido
+        fechasReservadas[i] = new Fecha(inicio + i);
     }
 }
+
 
 void Reservas::mostrarComprobante() const {
     Fecha fechaInicio = Fecha::fromString(fechaEntrada);

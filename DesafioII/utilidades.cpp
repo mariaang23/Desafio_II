@@ -3,13 +3,13 @@
 #include "anfitrion.h"
 #include "alojamiento.h"
 #include "huesped.h"
+#include "reservas.h"
 #include <iostream>
 #include <fstream>
-#include <sstream>
 using namespace std;
 
 bool rangeValidation(int numero, int intIni, int intFin){
-    return (numero >= intIni && numero <= intFin); // Retorna verdadero si el número está dentro del rango, de lo contrario falso
+    return (numero >= intIni && numero <= intFin);
 }
 
 int intValidation(int limInf, int limSup){
@@ -40,9 +40,9 @@ char charValidation(const string& mensajeStr){
         if (cin.fail()) {
             cin.clear();
             cin.ignore(1000, '\n');
-            cout << "Entrada no válida. Intente de nuevo." << endl;
+            cout << "Entrada no valida. Intente de nuevo." << endl;
         } else {
-            cin.ignore(1000, '\n'); // Limpiar el buffer por si escribieron más de un carácter
+            cin.ignore(1000, '\n');
             return opc;
         }
     }
@@ -69,7 +69,11 @@ void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas**& reservaciones,
 
         }
         else if (opc == 3) {
-            cout << "Funcion actualizar historico aun no esta implementada.\n";
+            string fechaStr = "";
+            cout << "\nIngrese la fecha de corte para generar el historico: \n";
+            cin >> fechaStr;
+            Fecha fechaCorte = Fecha::fromString(fechaStr);
+            actualizarHistorico(reservaciones, totalReservas, huespedes, totalHuespedes, fechaCorte);
         }
         else {
             exit = true;
@@ -77,8 +81,7 @@ void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas**& reservaciones,
     }
 }
 
-void mostrarMenuHuesped(Huesped* huespedActual, Huesped** huespedes, int totalHuespedes,
-                        Reservas**& reservaciones, int& totalReservas,
+void mostrarMenuHuesped(Huesped* huespedActual, Reservas**& reservaciones, int& totalReservas,
                         Alojamiento** alojamientos, int totalAlojamientos, Anfitrion** anfitriones, int totalAnfitriones){
     bool exit = false;
     while (!exit){
@@ -127,7 +130,7 @@ void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamie
 void guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const string &archivo){
     ofstream out(archivo, ios::trunc);
     if (!out.is_open()) {
-        cerr << "No se pudo abrir el archivo: " << archivo << endl;
+        // archivo no pudo abrirse, sin salida a consola
         return;
     }
 
@@ -146,10 +149,11 @@ void guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const stri
 
     out.close();
 }
+
 void guardarReservasActivasArchivo(Reservas** reservas, int totalReservas, const string& archivo){
     ofstream out(archivo, ios::trunc);
     if (!out.is_open()) {
-        cerr << "No se pudo abrir el archivo: " << archivo << endl;
+        // archivo no pudo abrirse, sin salida a consola
         return;
     }
 
@@ -168,4 +172,69 @@ void guardarReservasActivasArchivo(Reservas** reservas, int totalReservas, const
         }
     }
     out.close();
+}
+
+void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas, Huesped** huespedes, int totalHuespedes, Fecha& fechaCorte) {
+    Reservas** reservasHistorico = new Reservas*[totalReservas];
+    int totalReservasHistorico = 0;
+
+    for (int i = 0; i < totalReservas; i++) {
+        if (reservasActivas[i] != nullptr) {
+            Fecha fechaReserva = Fecha::fromString(reservasActivas[i]->getFechaEntrada());
+            if (fechaReserva < fechaCorte || fechaReserva == fechaCorte) {
+                reservasHistorico[totalReservasHistorico++] = reservasActivas[i];
+
+                string cedula = reservasActivas[i]->getCedulaHuesped();
+                string codigoReserva = reservasActivas[i]->getCodigoReserva();
+                for (int j = 0; j < totalHuespedes; j++) {
+                    if (huespedes[j] != nullptr && huespedes[j]->getCedulaHuesped() == cedula) {
+                        huespedes[j]->eliminarReservaHistorico(codigoReserva);
+                        break;
+                    }
+                }
+
+                reservasActivas[i] = nullptr;
+            }
+        }
+    }
+
+    ofstream archivoHistorico("historico.txt", ios::app);
+    if (!archivoHistorico.is_open()) {
+        for (int i = 0; i < totalReservasHistorico; i++) {
+            delete reservasHistorico[i];
+        }
+        delete[] reservasHistorico;
+        return;
+    }
+
+    for (int i = 0; i < totalReservasHistorico; i++) {
+        Reservas* r = reservasHistorico[i];
+        archivoHistorico << r->getCodigoReserva() << ";"
+                         << r->getCodigoAlojamiento() << ";"
+                         << r->getCedulaHuesped() << ";"
+                         << r->getFechaEntrada() << ";"
+                         << to_string(r->getCantNoches()) << ";"
+                         << r->getMetodoPago() << ";"
+                         << r->getFechaPago() << ";"
+                         << r->getMonto() << ";"
+                         << r->getAnotaciones() << endl;
+
+        delete r;
+    }
+    archivoHistorico.close();
+    delete[] reservasHistorico;
+
+    int nuevosActivos = 0;
+    for (int i = 0; i < totalReservas; i++) {
+        if (reservasActivas[i] != nullptr) {
+            reservasActivas[nuevosActivos++] = reservasActivas[i];
+        }
+    }
+    for (int i = nuevosActivos; i < totalReservas; i++) {
+        reservasActivas[i] = nullptr;
+    }
+    totalReservas = nuevosActivos;
+
+    guardarReservasActivasArchivo(reservasActivas, totalReservas, "ReservasActivas.txt");
+    guardarHuespedesArchivo(huespedes, totalHuespedes, "huespedes.txt");
 }

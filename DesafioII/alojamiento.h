@@ -27,12 +27,7 @@ public:
     const int &getPrecio() const;
 
     const string& getNombre() const;
-    const string& getNombreAnfitrion() const; // Asumiendo que lo usarás más adelante
-    const string& getDepartamento() const;
     const string& getMunicipio() const;
-    const string& getTipo() const;
-    const string& getDireccion() const;
-    const string& getAmenidades() const;
 
     void mostrarAlojamientos() const;
     bool estaDisponible(const string& fechaEntrada, int cantNoches, Reservas** reservas, int totalReservas);

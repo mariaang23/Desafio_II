@@ -17,9 +17,6 @@ private:
 
 public:
     Fecha(int diaInicial = 1, int mesInicial = 1, int anioInicial = 2000);
-    int getDia() const;
-    int getMes() const;
-    int getAnio() const;
     bool esValida() const;
 
     bool operator<(const Fecha& otraFecha) const;
@@ -27,7 +24,6 @@ public:
     Fecha operator+(int cantNoches) const;
 
     void imprimirConDia() const;
-    void imprimir() const;
     static Fecha fromString(const std::string& fechaStr);
     string aString() const;
 
