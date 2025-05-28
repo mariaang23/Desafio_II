@@ -5,7 +5,6 @@
 #include "reservas.h"
 #include "huesped.h"
 #include "anfitrion.h"
-
 using namespace std;
 
 // Validaciones básicas
@@ -30,19 +29,5 @@ void guardarReservasActivasArchivo(Reservas** reservas, int totalReservas, const
 void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas,
                          Huesped** huespedes, int totalHuespedes, Fecha& fechaCorte);
 
-// Liberar arreglos de punteros
-template <typename T>
-void liberarArregloDePunteros(T**& arreglo, int& total) {
-    if (arreglo == nullptr) return;
-
-    for (int i = 0; i < total; ++i) {
-        delete arreglo[i];
-        arreglo[i] = nullptr;
-    }
-
-    delete[] arreglo;
-    arreglo = nullptr;
-    total = 0;
-}
 
 #endif // UTILIDADES_H

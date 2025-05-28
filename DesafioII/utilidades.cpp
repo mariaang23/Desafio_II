@@ -8,6 +8,7 @@
  * de datos en archivos de texto y actualizar históricos de reservas.
  */
 
+#include "memoria.h"
 #include "utilidades.h"
 #include "fecha.h"
 #include "anfitrion.h"
@@ -17,6 +18,12 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
+
+/**Definicion de variables globales para almacenar memoria
+*/
+
+int contadorIteracionesGlobal = 0;
+size_t memoriaReservadaGlobal = 0;
 
 /**
  * @brief Verifica si un número está dentro de un rango dado.
@@ -45,6 +52,7 @@ int intValidation(int limInf, int limSup){
     int num = 0;
 
     while (true){
+        incrementarIteraciones();
         cout << "Digite la opcion (" << limInf << " - " << limSup << "): ";
         cin >> num;
 
@@ -74,6 +82,7 @@ int intValidation(int limInf, int limSup){
 char charValidation(const string& mensajeStr) {
     char opc;
     while (true) {
+        incrementarIteraciones();
         cout << mensajeStr;
         cin >> opc;
 
@@ -105,6 +114,7 @@ void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas**& reservaciones,
 {
     bool exit = false;
     while (!exit){
+        incrementarIteraciones();
         cout << "------------------------------" << endl;
         cout << "MENU ANFITRION" << endl;
         cout << "------------------------------" << endl;
@@ -152,6 +162,7 @@ void mostrarMenuHuesped(Huesped* huespedActual, Reservas**& reservaciones, int& 
                         Alojamiento** alojamientos, int totalAlojamientos, Anfitrion** anfitriones, int totalAnfitriones){
     bool exit = false;
     while (!exit){
+        incrementarIteraciones();
         cout << "------------------------------" << endl;
         cout << "MENU HUESPED" << endl;
         cout << "------------------------------" << endl;
@@ -186,6 +197,7 @@ void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamie
                                    Reservas** reservaciones, int totalReservas) {
     // Itera cada alojamiento
     for (int i = 0; i < totalAlojamientos; ++i) {
+        incrementarIteraciones();
         // Obtiene código y nombre del alojamiento
         string codigoAloj = alojamientos[i]->getCodigoAlojamiento();
         cout << "Alojamiento: " << alojamientos[i]->getNombre() << " (Codigo: " << codigoAloj << ")" << endl;
@@ -193,6 +205,7 @@ void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamie
         bool tieneReservas = false;
         // Recorre todas las reservas para ese alojamiento
         for (int j = 0; j < totalReservas; ++j) {
+            incrementarIteraciones();
             if (reservaciones[j]->getCodigoAlojamiento() == codigoAloj) {
                 reservaciones[j]->mostrarReserva();
                 tieneReservas = true;
@@ -226,6 +239,7 @@ void guardarHuespedesArchivo(Huesped** huespedes, int totalHuespedes, const stri
 
     // Recorre todos los huéspedes y escribe sus datos en archivo
     for (int i = 0; i < totalHuespedes; ++i) {
+        incrementarIteraciones();
         out << huespedes[i]->getCedulaHuesped() << ";"
             << huespedes[i]->getClaveHuesped() << ";"
             << huespedes[i]->getAntiguedad() << ";"
@@ -259,6 +273,7 @@ void guardarReservasActivasArchivo(Reservas** reservas, int totalReservas, const
 
     // Recorre todas las reservas activas y escribe sus datos en el archivo
     for (int i = 0; i < totalReservas; ++i) {
+        incrementarIteraciones();
         if (reservas[i] != nullptr){
             out << reservas[i]->getCodigoReserva() << ";"
                 << reservas[i]->getCodigoAlojamiento() << ";"
@@ -294,11 +309,13 @@ void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas, Huespe
 
     // Crear un arreglo dinámico para almacenar temporalmente las reservas que pasarán a histórico
     Reservas** reservasHistorico = new Reservas*[totalReservas];
+    registrarMemoria<Reservas>(totalReservas);
     int totalReservasHistorico = 0;
 
     // Recorrer todas las reservas activas para identificar cuáles pasan a histórico
     for (int i = 0; i < totalReservas; i++) {
 
+        incrementarIteraciones();
         // Verificar que la reserva actual no sea nullptr (exista)
         if (reservasActivas[i] != nullptr) {
 
@@ -332,14 +349,18 @@ void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas, Huespe
     ofstream archivoHistorico("historico.txt", ios::app);
     if (!archivoHistorico.is_open()) {
         for (int i = 0; i < totalReservasHistorico; i++) {
+            incrementarIteraciones();
             delete reservasHistorico[i];
+            liberarMemoria<Reservas>(1);
         }
         delete[] reservasHistorico;
+        liberarMemoria<Reservas*>(totalReservasHistorico);
         return;
     }
 
     // Guardar en el archivo histórico todas las reservas que se movieron
     for (int i = 0; i < totalReservasHistorico; i++) {
+        incrementarIteraciones();
         Reservas* r = reservasHistorico[i];
 
         // Escribir cada dato de la reserva separado por punto y coma
@@ -357,10 +378,12 @@ void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas, Huespe
     }
     archivoHistorico.close();
     delete[] reservasHistorico;  // Liberar el arreglo temporal de reservas para histórico
+    liberarMemoria<Reservas*>(totalReservasHistorico);
 
     int nuevosActivos = 0;
     // Compactar el arreglo de reservas activas eliminando los nullptrs
     for (int i = 0; i < totalReservas; i++) {
+        incrementarIteraciones();
         if (reservasActivas[i] != nullptr) {
             reservasActivas[nuevosActivos++] = reservasActivas[i];
         }
@@ -368,6 +391,7 @@ void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas, Huespe
 
     // Poner nullptr en las posiciones restantes después de compactar
     for (int i = nuevosActivos; i < totalReservas; i++) {
+        incrementarIteraciones();
         reservasActivas[i] = nullptr;
     }
 
@@ -376,4 +400,9 @@ void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas, Huespe
 
     guardarReservasActivasArchivo(reservasActivas, totalReservas, "ReservasActivas.txt");
     guardarHuespedesArchivo(huespedes, totalHuespedes, "huespedes.txt");
+
+    mostrarUsoMemoria();
 }
+
+
+

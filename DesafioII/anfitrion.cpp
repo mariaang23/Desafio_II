@@ -4,6 +4,7 @@
  *        responsables de alojamientos, incluyendo atributos personales y métodos para acceso y manipulación de datos.
  */
 
+#include "memoria.h"
 #include "anfitrion.h"
 #include "alojamiento.h"
 #include "huesped.h"
@@ -22,6 +23,19 @@ using namespace std;
  */
 Anfitrion::Anfitrion(const string& _cedula, const string& _clave, const string& _antiguedad, const string& _puntos, const string& _codigosAlojamientos)
     : cedula(_cedula),clave(_clave), antiguedad(_antiguedad), puntuacion(_puntos), codigosAlojamientos(_codigosAlojamientos) {
+}
+
+/**
+ * @brief Destructor de la clase Anfitrion.
+ *
+ * Libera la memoria dinamica asignada para el arreglo de punteros a alojamientos asociados.
+ * No elimina los objetos Alojamiento, ya que no son propiedad del anfitrion, solo estan referenciados.
+ */
+Anfitrion::~Anfitrion() {
+    delete[] alojamientosAnfitrion;
+    liberarMemoria<Alojamiento*>(cantidadAlojamientos);
+    alojamientosAnfitrion = nullptr;
+    mostrarUsoMemoria();
 }
 
 
@@ -71,6 +85,7 @@ void Anfitrion::cargarAnfitriones(Anfitrion**& anfitriones, int& totalAnfitrione
 
     // Reserva memoria para el arreglo de punteros a Anfitrion
     anfitriones = new Anfitrion*[total];
+    registrarMemoria<Anfitrion*>(total);
     totalAnfitriones = total;
     int i = 0;
 
@@ -84,9 +99,12 @@ void Anfitrion::cargarAnfitriones(Anfitrion**& anfitriones, int& totalAnfitrione
         getline(frase, puntuacion_, ';');
         getline(frase, codigosAlojamientos_, ';');
         Anfitrion* nuevoAnfitrion= new Anfitrion(cedula_, clave_, antiguedad_, puntuacion_, codigosAlojamientos_);
+        registrarMemoria<Anfitrion>(1);
         anfitriones[i++] = nuevoAnfitrion;
+        incrementarIteraciones();
     }
     archivo.close();
+
 }
 
 /**
@@ -103,11 +121,13 @@ void Anfitrion::asociarAlojamientos(Alojamiento** listaAlojamientos, int totalAl
 
      // Reserva memoria para alojamientos asociados (nota: la cantidad de alojamientos es numAlojamientos + 1)
     alojamientosAnfitrion = new Alojamiento*[numAlojamientos];
+    registrarMemoria<Alojamiento>(numAlojamientos);
     cantidadAlojamientos = 0;
 
     size_t start = 0;
     // Recorre la cadena de códigos separando por comas
     while (start < codigosAlojamientos.length()){
+        incrementarIteraciones();
         size_t end = codigosAlojamientos.find(',', start);
         if (end == string::npos) {
             end = codigosAlojamientos.length();
@@ -124,6 +144,7 @@ void Anfitrion::asociarAlojamientos(Alojamiento** listaAlojamientos, int totalAl
         // Busca el alojamiento con el código dado en la lista global y lo asocia si lo encuentra
         if (!codAlojamiento.empty()){
             for (int i = 0; i < totalAlojamientos; i++){
+                incrementarIteraciones();
                 if (listaAlojamientos[i]->getCodigoAlojamiento() == codAlojamiento){
                     alojamientosAnfitrion[cantidadAlojamientos++] = listaAlojamientos[i];
                     break;
@@ -140,6 +161,7 @@ void Anfitrion::asociarAlojamientos(Alojamiento** listaAlojamientos, int totalAl
 void Anfitrion::mostrarAlojamientosAnfitrion(){
     std::cout << "Anfitrion " << cedula << ":\n";
     for (int j = 0; j < cantidadAlojamientos; j++){
+        incrementarIteraciones();
         std::cout << "Alojamientos: " << j+1 << std::endl;
         alojamientosAnfitrion[j]->mostrarAlojamientos();
     }
@@ -152,7 +174,7 @@ void Anfitrion::mostrarAlojamientosAnfitrion(){
  */
 void Anfitrion::mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int totalReservas) {
     for (int i = 0; i < cantidadAlojamientos; ++i) {
-
+        incrementarIteraciones();
         string codAloj = alojamientosAnfitrion[i]->getCodigoAlojamiento();
         cout << "- Alojamiento: " << alojamientosAnfitrion[i]->getNombre()
              << " (Codigo: " << codAloj << ")" << endl;
@@ -160,6 +182,7 @@ void Anfitrion::mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int t
         bool tieneReservas = false;
 
         for (int j = 0; j < totalReservas; ++j) {
+            incrementarIteraciones();
             if (reservaciones[j]->getCodigoAlojamiento() == codAloj) {
                 reservaciones[j]->mostrarReserva();
                 tieneReservas = true;
@@ -170,6 +193,7 @@ void Anfitrion::mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int t
             cout << "   No tiene reservas\n";
         }
     }
+    mostrarUsoMemoria();
 }
 
 /**
@@ -187,6 +211,7 @@ void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&rese
     string cedulaHuespedActualizar = "";
 
     for (int i = 0; i < totalReservas; ++i) {
+        incrementarIteraciones();
         if (reservas[i]->getCodigoReserva() == _codigoReserva) {
             indexReserva = i;
             codigoAlojamientoReserva = reservas[i]->getCodigoAlojamiento();
@@ -203,6 +228,7 @@ void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&rese
     // Verificar que la reserva pertenece a uno de los alojamientos del anfitrión
     bool perteneceAlAnfitrion = false;
     for (int i = 0; i < cantidadAlojamientos; ++i) {
+        incrementarIteraciones();
         if (alojamientosAnfitrion[i]->getCodigoAlojamiento() == codigoAlojamientoReserva) {
             perteneceAlAnfitrion = true;
             break;
@@ -217,6 +243,7 @@ void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&rese
     // Buscar el huésped asociado para actualizar su lista de reservas
     Huesped* huespedActualizado = nullptr;
     for (int i = 0; i < totalHuespedes; ++i) {
+        incrementarIteraciones();
         if (huespedes[i]->getCedulaHuesped() == cedulaHuespedActualizar) {
             huespedActualizado = huespedes[i];
             break;
@@ -228,7 +255,9 @@ void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&rese
 
     // Elimina la reserva del arreglo global y desplaza los elementos para llenar el hueco
     delete reservas[indexReserva];
+    liberarMemoria<Reservas>(1);
     for (int i = indexReserva; i < totalReservas - 1; ++i) {
+        incrementarIteraciones();
         reservas[i] = reservas[i + 1];
     }
     totalReservas--;
@@ -238,6 +267,8 @@ void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&rese
     huespedActualizado->asociarReservas(reservas, totalReservas);
 
     cout << "Reserva " << _codigoReserva << " eliminada exitosamente.\n";
+
+    mostrarUsoMemoria();
 }
 
 /**
@@ -247,6 +278,7 @@ void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&rese
  */
 bool Anfitrion::poseeAlojamiento(const string& codigoAloj) const {
     for (int i = 0; i < cantidadAlojamientos; ++i) {
+        incrementarIteraciones();
         if (alojamientosAnfitrion[i]->getCodigoAlojamiento() == codigoAloj) {
             return true;
         }

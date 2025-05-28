@@ -3,12 +3,15 @@
 #include "huesped.h"
 #include "anfitrion.h"
 #include "utilidades.h"
+#include "memoria.h"
+#include "liberar_memoria.h"
 #include <iostream>
 
 using namespace std;
 
 int main()
 {
+
     int totalAlojamientos = 0, totalAnfitriones = 0;
     Alojamiento** alojamientos = nullptr;
     Anfitrion** anfitriones = nullptr;
@@ -17,6 +20,7 @@ int main()
     Anfitrion::cargarAnfitriones(anfitriones, totalAnfitriones);
 
     for (int i = 0; i < totalAnfitriones; i++) {
+        incrementarIteraciones();
         anfitriones[i]->asociarAlojamientos(alojamientos, totalAlojamientos);
     }
 
@@ -29,22 +33,27 @@ int main()
 
     // Asociar las reservas a los huéspedes
     for (int i = 0; i < totalHuespedes; i++) {
+        incrementarIteraciones();
         huespedes[i]->asociarReservas(reservaciones, totalReservas);
     }
 
     // Asociar fechas reservadas a cada reserva
     for (int i = 0; i < totalReservas; i++) {
+        incrementarIteraciones();
         reservaciones[i]->asociarFechasReservadas();
     }
 
     // Enlazar reservas con alojamientos
     for (int i = 0; i < totalReservas; ++i) {
+        incrementarIteraciones();
         reservaciones[i]->enlazarAlojamiento(alojamientos, totalAlojamientos);
     }
 
+    mostrarUsoMemoria();
     // Login
     bool exitPpal = false;
     while (!exitPpal) {
+        incrementarIteraciones();
         cout << "---------------------------------------------" << endl;
         cout << "BIENVENIDO AL SISTEMA DE RESERVAS" << endl;
         cout << "---------------------------------------------" << endl;
@@ -59,6 +68,7 @@ int main()
 
         // Verificar login de anfitrión
         for (int i = 0; i < totalAnfitriones; i++) {
+            incrementarIteraciones();
             if ((anfitriones[i]->getCedulaAnfitrion() == id) && (anfitriones[i]->getClaveAnfitrion() == key)) {
                 Anfitrion* anfitrionActual = anfitriones[i];
                 mostrarMenuAnfitrion(anfitrionActual, reservaciones, totalReservas, huespedes, totalHuespedes);
@@ -70,6 +80,7 @@ int main()
         // Verificar login de huésped
         if (!loginExitoso) {
             for (int i = 0; i < totalHuespedes; i++) {
+                incrementarIteraciones();
                 if ((huespedes[i]->getCedulaHuesped() == id) && (huespedes[i]->getClaveHuesped() == key)) {
                     Huesped* huespedActual = huespedes[i];
                     mostrarMenuHuesped(huespedActual, reservaciones, totalReservas, alojamientos, totalAlojamientos,anfitriones,totalAnfitriones);
@@ -99,6 +110,8 @@ int main()
     liberarArregloDePunteros(alojamientos, totalAlojamientos);
     liberarArregloDePunteros(huespedes, totalHuespedes);
     liberarArregloDePunteros(reservaciones, totalReservas);
+
+    mostrarUsoMemoria();
 
     return 0;
 }

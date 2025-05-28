@@ -23,16 +23,22 @@ public:
                 const string& _departamento, const string& _municipio, const string& _tipo,
                 const string& _direccion, const int& _precioStr, const string& _amenidades);
 
+    ~Alojamiento();
+
     const string& getCodigoAlojamiento() const;
+
     const int &getPrecio() const;
 
     const string& getNombre() const;
+
     const string& getMunicipio() const;
 
     void mostrarAlojamientos() const;
+
     bool estaDisponible(const string& fechaEntrada, int cantNoches, Reservas** reservas, int totalReservas);
 
     static void cargarAlojamientos(Alojamiento**& alojamientos, int& totalAlojamientos);
+
 };
 
 #endif // ALOJAMIENTO_H

@@ -25,9 +25,13 @@ public:
     ~Huesped();
 
     const string& getCedulaHuesped() const;
+
     const string& getClaveHuesped() const;
+
     const string& getAntiguedad() const;
+
     const string& getPuntuacion() const;
+
     const string& getCodigosReservas() const;
 
     void anularReservacion(const string& _codigoReserva, Reservas**& reservaciones, int& totalReservas);
@@ -44,6 +48,7 @@ public:
                              Anfitrion** anfitriones, int totalAnfitriones, Reservas** &reservas, int &totalReservas);
 
     void eliminarReservaHistorico(const string& codigoReserva);
+
 };
 
 #endif // HUESPED_H
