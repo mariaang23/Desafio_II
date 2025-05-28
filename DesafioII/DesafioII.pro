@@ -17,5 +17,7 @@ HEADERS += \
     anfitrion.h \
     fecha.h \
     huesped.h \
+    liberar_memoria.h \
+    memoria.h \
     reservas.h \
     utilidades.h

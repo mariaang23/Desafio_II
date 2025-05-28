@@ -6,7 +6,7 @@
  * cargar datos desde archivo, enlazar con alojamientos, gestionar fechas reservadas,
  * mostrar información relevante y manejar la memoria asociada.
  */
-
+#include "memoria.h"
 #include "reservas.h"
 #include "fecha.h"
 
@@ -44,15 +44,19 @@ Reservas::~Reservas() {
     if (fechasReservadas != nullptr) {
         if (cantNoches > 0 && cantNoches <= 365) {
             for (int i = 0; i < cantNoches; ++i) {
+                incrementarIteraciones();
                 delete fechasReservadas[i];
                 fechasReservadas[i] = nullptr;
             }
         }
         delete[] fechasReservadas;
+        liberarMemoria<Fecha*>(cantNoches);
         fechasReservadas = nullptr;
     }
 
     alojamientoPtr = nullptr;  // Solo desvincular, no eliminar
+
+    mostrarUsoMemoria();
 }
 
 /**
@@ -153,11 +157,14 @@ Fecha** Reservas::getFechasReservadas() const {
 void Reservas::setFechasReservadas(Fecha** nuevasFechas) {
     if (fechasReservadas != nullptr) {
         for (int i = 0; i < cantNoches; i++) {
+            incrementarIteraciones();
             delete fechasReservadas[i];
         }
         delete[] fechasReservadas;
     }
     fechasReservadas = nuevasFechas;
+
+    mostrarUsoMemoria();
 }
 
 /**
@@ -179,11 +186,13 @@ void Reservas::setAlojamientoPtr(Alojamiento* nuevoPtr){
  */
 void Reservas::enlazarAlojamiento(Alojamiento** alojamientos, int totalAlojamientos) {
     for (int i = 0; i < totalAlojamientos; ++i) {
+        incrementarIteraciones();
         if (alojamientos[i]->getCodigoAlojamiento() == codigoAlojamiento) {
             alojamientoPtr = alojamientos[i];
             break;
         }
     }
+
 }
 
 /**
@@ -210,6 +219,7 @@ void Reservas::cargarReservas(Reservas**& reservaciones, int& totalReservas) {
 
     // Reservar memoria para el arreglo de punteros a Reservas
     reservaciones = new Reservas*[total];
+    registrarMemoria<Reservas*>(total);
     totalReservas = total;
     int i = 0;
 
@@ -231,7 +241,9 @@ void Reservas::cargarReservas(Reservas**& reservaciones, int& totalReservas) {
         int cantNochesInt = stoi(cantNochesStr);
         // Crear nuevo objeto Reserva con los datos extraídos
         Reservas* nuevaReserva = new Reservas(codigoReserva_, fechaEntrada_, cantNochesInt, codigoAlojamiento_, cedulaHuesped_, metodoPago_, fechaPago_, monto_, anotaciones_);
+        registrarMemoria<Reservas>(1);
         reservaciones[i++] = nuevaReserva;  // Guardar puntero en el arreglo
+        incrementarIteraciones();
     }
 
     archivo.close();
@@ -268,11 +280,15 @@ void Reservas::asociarFechasReservadas() {
     // Convertir la fecha de entrada de string a objeto Fecha y crear arreglo dinamico para fechas reservadas
     Fecha inicio = Fecha::fromString(fechaEntrada);
     fechasReservadas = new Fecha*[cantNoches];
+    registrarMemoria<Fecha>(cantNoches);
 
      // Asignar cada fecha consecutiva sumando días a la fecha inicial
     for (int i = 0; i < cantNoches; i++) {
+        incrementarIteraciones();
         fechasReservadas[i] = new Fecha(inicio + i);
+        registrarMemoria<Fecha>(1);
     }
+
 }
 
 

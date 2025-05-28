@@ -4,6 +4,7 @@
  *        cálculo de día de la semana, suma de días, comparación y conversión a/desde cadenas de texto.
  */
 
+#include "memoria.h"
 #include <iostream>
 #include "fecha.h"
 using namespace std;
@@ -18,6 +19,14 @@ bool Fecha::esBisiesto() const {
     if (anio % 100 == 0) return false;
     return anio % 4 == 0;
 }
+
+/**
+ * @brief Destructor de la clase Fecha.
+ *
+ * No realiza operaciones, ya que la clase no reserva memoria dinámica.
+ * Se define para mantener consistencia y permitir futuras ampliaciones.
+ */
+Fecha::~Fecha() {}
 
 /**
  * @brief Calcula el día de la semana para la fecha actual.
@@ -133,6 +142,7 @@ Fecha Fecha::operator+(int diasASumar) const {
 
     // Ajustar el día y avanzar meses/años si es necesario
     while (d > diasDelMes(m, a)) {
+        incrementarIteraciones();
         d -= diasDelMes(m, a);
         m++;
         if (m > 12) {

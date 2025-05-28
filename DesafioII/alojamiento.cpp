@@ -4,6 +4,7 @@
  *        ubicación, tipo, precio, amenidades y métodos para carga, consulta y verificación de disponibilidad.
  */
 
+#include "memoria.h"
 #include "alojamiento.h"
 #include "fecha.h"
 #include "reservas.h"
@@ -32,6 +33,15 @@ Alojamiento::Alojamiento(const string& _codigo, const string& _nombre, const str
                          const string& _direccion, const int &_precioStr, const string& _amenidades)
     : codigo(_codigo), nombre(_nombre), nombreAnf(_nombreAnf), departamento(_departamento), municipio(_municipio),
       tipo(_tipo), direccion(_direccion), precio(_precioStr), amenidades(_amenidades) {}
+
+/**
+ * @brief Destructor de la clase Alojamiento.
+ *
+ * Actualmente no realiza operaciones explicitas, ya que la clase no gestiona memoria dinamica internamente.
+ * Se incluye como buena practica para facilitar futuras extensiones, depuracion y garantizar una destruccion segura.
+ */
+Alojamiento::~Alojamiento() {}
+
 
 /**
  * @brief Retorna el código único del alojamiento.
@@ -70,6 +80,9 @@ const string& Alojamiento::getMunicipio() const {
     return municipio;
 }
 
+/**
+ * @brief Muestra la informacion basica del alojamiento por consola.
+ */
 void Alojamiento::mostrarAlojamientos() const {
     cout << "    - " << nombre << " (" << tipo << ", $" << precio << ")\n";
 }
@@ -99,6 +112,8 @@ void Alojamiento::cargarAlojamientos(Alojamiento**& alojamientos, int& totalAloj
     archivo.seekg(0);
 
     alojamientos = new Alojamiento*[total];
+    registrarMemoria<Alojamiento*>(total);
+
     totalAlojamientos = total;
     int i = 0;
 
@@ -117,9 +132,12 @@ void Alojamiento::cargarAlojamientos(Alojamiento**& alojamientos, int& totalAloj
         getline(frase, amenidades_);
         int precioInt_ = stoi(precio_);
         Alojamiento* nuevoAlojamiento = new Alojamiento(codigo_, nombre_, nombreAnf_, departamento_, municipio_, tipo_, direccion_, precioInt_, amenidades_);
+        registrarMemoria<Alojamiento>(1);
         alojamientos[i++] = nuevoAlojamiento;
+        incrementarIteraciones();
     }
     archivo.close();
+
 }
 
 /**
@@ -138,6 +156,7 @@ bool Alojamiento::estaDisponible(const string& fechaEntrada, int cantNoches, Res
     bool solapa = false;
     Fecha fechaInicio = Fecha::fromString(fechaEntrada);
     Fecha** fechasIngresadas = new Fecha*[cantNoches];
+    registrarMemoria<Fecha*>(cantNoches);
 
     // Generar arreglo con todas las fechas de la nueva solicitud
     for (int j = 0; j < cantNoches; j++) {
@@ -146,9 +165,11 @@ bool Alojamiento::estaDisponible(const string& fechaEntrada, int cantNoches, Res
 
     // Comparar con cada reserva existente
     for (int i = 0; i < totalReservas && !solapa; i++) {
+        incrementarIteraciones();
         int cantidadExistente = reservas[i]->getCantNoches();
         Fecha reservaInicio = Fecha::fromString(reservas[i]->getFechaEntrada());
         Fecha** fechasExistentes = new Fecha*[cantidadExistente];
+        registrarMemoria<Fecha*>(cantidadExistente);
 
         // Generar arreglo con todas las fechas de la reserva existente
         for (int j = 0; j < cantidadExistente; j++) {
@@ -157,6 +178,7 @@ bool Alojamiento::estaDisponible(const string& fechaEntrada, int cantNoches, Res
 
          // Comparar fechas de solicitud vs fechas reservadas
         for (int j = 0; j < cantNoches && !solapa; j++) {
+            incrementarIteraciones();
             for (int k = 0; k < cantidadExistente && !solapa; k++) {
                 if (*fechasIngresadas[j] == *fechasExistentes[k]) {  // Comparacion por contenido
                     //si hay solapamiento el alojamiento no esta disponible
@@ -170,6 +192,7 @@ bool Alojamiento::estaDisponible(const string& fechaEntrada, int cantNoches, Res
             delete fechasExistentes[j];
         }
         delete[] fechasExistentes;
+        liberarMemoria<Fecha>(cantidadExistente);
     }
 
     // Liberar memoria de fechas ingresadas
@@ -177,6 +200,7 @@ bool Alojamiento::estaDisponible(const string& fechaEntrada, int cantNoches, Res
         delete fechasIngresadas[j];
     }
     delete[] fechasIngresadas;
+    liberarMemoria<Fecha>(cantNoches);
 
     return !solapa; // true si no hay solapamiento
 }

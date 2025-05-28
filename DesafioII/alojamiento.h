@@ -23,6 +23,8 @@ public:
                 const string& _departamento, const string& _municipio, const string& _tipo,
                 const string& _direccion, const int& _precioStr, const string& _amenidades);
 
+    ~Alojamiento();
+
     const string& getCodigoAlojamiento() const;
     const int &getPrecio() const;
 
