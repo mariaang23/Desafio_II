@@ -21,11 +21,15 @@ public:
     bool esValida() const;
 
     bool operator<(const Fecha& otraFecha) const;
+
     bool operator==(const Fecha& otraFecha) const;
+
     Fecha operator+(int cantNoches) const;
 
     void imprimirConDia() const;
+
     static Fecha fromString(const std::string& fechaStr);
+
     string aString() const;
 
 };

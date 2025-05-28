@@ -25,7 +25,9 @@ public:
     ~Anfitrion();
 
     const string& getCedulaAnfitrion() const;
+
     const string& getClaveAnfitrion() const;
+
     const string& getPuntuacion() const;
 
     static void cargarAnfitriones(Anfitrion**& anfitriones, int& totalAnfitriones);

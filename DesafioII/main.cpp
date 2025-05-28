@@ -20,6 +20,7 @@ int main()
     Anfitrion::cargarAnfitriones(anfitriones, totalAnfitriones);
 
     for (int i = 0; i < totalAnfitriones; i++) {
+        incrementarIteraciones();
         anfitriones[i]->asociarAlojamientos(alojamientos, totalAlojamientos);
     }
 
