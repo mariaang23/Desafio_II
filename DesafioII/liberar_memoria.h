@@ -13,6 +13,8 @@ void liberarArregloDePunteros(T**& arreglo, int& total) {
             delete arreglo[i];
             liberarMemoria<T>(1);
             arreglo[i] = nullptr;
+        } else {
+            std::cout << "Elemento en indice " << i << " ya es nullptr, no se libera" << std::endl;
         }
     }
 

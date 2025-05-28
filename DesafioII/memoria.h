@@ -6,6 +6,7 @@
 extern int contadorIteracionesGlobal;
 extern size_t memoriaReservadaGlobal;
 
+
 // Plantilla para registrar memoria
 template <typename T>
 void registrarMemoria(size_t cantidad) {

@@ -16,8 +16,6 @@ private:
 public:
     Fecha(int diaInicial = 1, int mesInicial = 1, int anioInicial = 2000);
 
-    ~Fecha();
-
     bool esValida() const;
 
     bool operator<(const Fecha& otraFecha) const;

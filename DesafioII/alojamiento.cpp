@@ -40,7 +40,8 @@ Alojamiento::Alojamiento(const string& _codigo, const string& _nombre, const str
  * Actualmente no realiza operaciones explicitas, ya que la clase no gestiona memoria dinamica internamente.
  * Se incluye como buena practica para facilitar futuras extensiones, depuracion y garantizar una destruccion segura.
  */
-Alojamiento::~Alojamiento() {}
+Alojamiento::~Alojamiento() {
+}
 
 
 /**
@@ -137,7 +138,6 @@ void Alojamiento::cargarAlojamientos(Alojamiento**& alojamientos, int& totalAloj
         incrementarIteraciones();
     }
     archivo.close();
-
 }
 
 /**
@@ -161,6 +161,7 @@ bool Alojamiento::estaDisponible(const string& fechaEntrada, int cantNoches, Res
     // Generar arreglo con todas las fechas de la nueva solicitud
     for (int j = 0; j < cantNoches; j++) {
         fechasIngresadas[j] = new Fecha(fechaInicio + j);
+        registrarMemoria<Fecha>(1);
     }
 
     // Comparar con cada reserva existente
@@ -174,6 +175,7 @@ bool Alojamiento::estaDisponible(const string& fechaEntrada, int cantNoches, Res
         // Generar arreglo con todas las fechas de la reserva existente
         for (int j = 0; j < cantidadExistente; j++) {
             fechasExistentes[j] = new Fecha(reservaInicio + j);
+            registrarMemoria<Fecha>(1);
         }
 
          // Comparar fechas de solicitud vs fechas reservadas
@@ -190,17 +192,19 @@ bool Alojamiento::estaDisponible(const string& fechaEntrada, int cantNoches, Res
         // Liberar memoria de fechas existentes
         for (int j = 0; j < cantidadExistente; j++) {
             delete fechasExistentes[j];
+            liberarMemoria<Fecha>(1);
         }
         delete[] fechasExistentes;
-        liberarMemoria<Fecha>(cantidadExistente);
+        liberarMemoria<Fecha*>(cantidadExistente);
     }
 
     // Liberar memoria de fechas ingresadas
     for (int j = 0; j < cantNoches; j++) {
         delete fechasIngresadas[j];
+        liberarMemoria<Fecha>(1);
     }
     delete[] fechasIngresadas;
-    liberarMemoria<Fecha>(cantNoches);
+    liberarMemoria<Fecha*>(cantNoches);
 
     return !solapa; // true si no hay solapamiento
 }

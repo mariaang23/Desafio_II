@@ -34,6 +34,8 @@ public:
 
     const string& getCodigosReservas() const;
 
+    int getCantidadReservas() const;
+
     void anularReservacion(const string& _codigoReserva, Reservas**& reservaciones, int& totalReservas);
 
     static void cargarHuespedes(Huesped**& huespedes, int& totalHuespedes);
@@ -49,6 +51,9 @@ public:
 
     void eliminarReservaHistorico(const string& codigoReserva);
 
+    static void inicializarContadorReservas(Reservas** reservaciones, int& totalReservas);
+
+    void setReserva(int index, Reservas* reserva);
 };
 
 #endif // HUESPED_H
