@@ -123,12 +123,14 @@ void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas**& reservaciones,
 
         if (opc == 1) {
             anfitrionActual->mostrarReservasDeSusAlojamientos(reservaciones, totalReservas);
+            mostrarUsoMemoria();
         }
         else if (opc == 2) {
             string codReservaEliminar;
             cout << "Ingrese el codigo de la reserva que desea eliminar: " << endl;
             cin >> codReservaEliminar;
             anfitrionActual->anularReservacion(codReservaEliminar,reservaciones,totalReservas,huespedes,totalHuespedes);
+            mostrarUsoMemoria();
 
         }
         else if (opc == 3) {
@@ -138,6 +140,7 @@ void mostrarMenuAnfitrion(Anfitrion* anfitrionActual, Reservas**& reservaciones,
             Fecha fechaCorte = Fecha::fromString(fechaStr);
             actualizarHistorico(reservaciones, totalReservas, huespedes, totalHuespedes, fechaCorte);
             cout << "\nSe ha actualizado el historico correctamente" << endl;
+            mostrarUsoMemoria();
         }
         else {
             exit = true;
@@ -170,12 +173,14 @@ void mostrarMenuHuesped(Huesped* huespedActual, Reservas**& reservaciones, int& 
         int opc = intValidation(1, 3);
         if (opc == 1) {
             huespedActual->reservarAlojamiento(alojamientos,totalAlojamientos,anfitriones,totalAnfitriones,reservaciones,totalReservas);
+            mostrarUsoMemoria();
         }
         else if (opc == 2) {
             string codReservaEliminar;
             cout << "Ingrese el codigo de la reserva que desea eliminar: " << endl;
             cin >> codReservaEliminar;
             huespedActual->anularReservacion(codReservaEliminar, reservaciones, totalReservas);
+            mostrarUsoMemoria();
         }
         else{
             exit = true;
@@ -214,7 +219,7 @@ void mostrarReservasPorAlojamiento(Alojamiento** alojamientos, int totalAlojamie
 
         if (!tieneReservas) {
             // Indica que no hay reservas para ese alojamiento
-            cout << "   No tiene reservas asociadas.\n";
+            cout << "No tiene reservas asociadas.\n";
         }
 
         cout << "--------------------------------------" << endl;
@@ -309,7 +314,8 @@ void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas, Huespe
 
     // Crear un arreglo dinámico para almacenar temporalmente las reservas que pasarán a histórico
     Reservas** reservasHistorico = new Reservas*[totalReservas];
-    registrarMemoria<Reservas>(totalReservas);
+    registrarMemoria<Reservas*>(totalReservas);
+
     int totalReservasHistorico = 0;
 
     // Recorrer todas las reservas activas para identificar cuáles pasan a histórico
@@ -375,6 +381,7 @@ void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas, Huespe
                          << r->getAnotaciones() << endl;
 
         delete r;    // Liberar la memoria de la reserva que ya se archivó
+        liberarMemoria<Reservas>(1);
     }
     archivoHistorico.close();
     delete[] reservasHistorico;  // Liberar el arreglo temporal de reservas para histórico
@@ -400,8 +407,6 @@ void actualizarHistorico(Reservas**& reservasActivas, int& totalReservas, Huespe
 
     guardarReservasActivasArchivo(reservasActivas, totalReservas, "ReservasActivas.txt");
     guardarHuespedesArchivo(huespedes, totalHuespedes, "huespedes.txt");
-
-    mostrarUsoMemoria();
 }
 
 

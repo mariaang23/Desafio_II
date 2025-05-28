@@ -29,7 +29,10 @@ int main()
     Huesped** huespedes = nullptr;
 
     Reservas::cargarReservas(reservaciones, totalReservas);
+    Huesped::inicializarContadorReservas(reservaciones, totalReservas);
     Huesped::cargarHuespedes(huespedes, totalHuespedes);
+
+    mostrarUsoMemoria();
 
     // Asociar las reservas a los huéspedes
     for (int i = 0; i < totalHuespedes; i++) {
@@ -50,6 +53,7 @@ int main()
     }
 
     mostrarUsoMemoria();
+
     // Login
     bool exitPpal = false;
     while (!exitPpal) {
@@ -107,10 +111,9 @@ int main()
     }
     // Liberar memoria
     liberarArregloDePunteros(anfitriones, totalAnfitriones);
-    liberarArregloDePunteros(alojamientos, totalAlojamientos);
     liberarArregloDePunteros(huespedes, totalHuespedes);
+    liberarArregloDePunteros(alojamientos, totalAlojamientos);
     liberarArregloDePunteros(reservaciones, totalReservas);
-
     mostrarUsoMemoria();
 
     return 0;

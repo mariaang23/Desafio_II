@@ -21,14 +21,6 @@ bool Fecha::esBisiesto() const {
 }
 
 /**
- * @brief Destructor de la clase Fecha.
- *
- * No realiza operaciones, ya que la clase no reserva memoria dinámica.
- * Se define para mantener consistencia y permitir futuras ampliaciones.
- */
-Fecha::~Fecha() {}
-
-/**
  * @brief Calcula el día de la semana para la fecha actual.
  *
  * Utiliza el algoritmo de Zeller. El resultado se ajusta para retornar:
@@ -191,18 +183,36 @@ Fecha Fecha::fromString(const std::string& fechaStr) {
     for (char c : fechaConSlash) {
         if (c == '/') {
             if (subStrFec.empty()) {
-                cerr << "Error: subStrFec esta vacio antes de la conversion a int.\n";
+                cerr << "Error: campo vacio en la fecha\n";
                 return Fecha(0, 0, 0);  // Fecha inválida
             }
-            partes[parteActual++] = stoi(subStrFec);
-            subStrFec = "";
-            if (parteActual >= 3) break;
+            try {
+                if (parteActual < 3) {
+                    partes[parteActual] = std::stoi(subStrFec);
+                    parteActual++;
+                } else {
+                    std::cerr << "Error: más de tres partes en la fecha.\n";
+                    return Fecha(0, 0, 0);
+                }
+            } catch (...) {
+                std::cerr << "Error: conversión inválida en parte '" << subStrFec << "'\n";
+                return Fecha(0, 0, 0);
+            }
+            subStrFec.clear();
         } else {
             subStrFec += c;
         }
     }
 
+    // Verificar que las 3 partes se hayan llenado correctamente
+    if (parteActual != 3) {
+        std::cerr << "Error: numero incorrecto de partes en la fecha.\n";
+        return Fecha(0, 0, 0);
+    }
+
+    // Crear y devolver el objeto Fecha con día, mes, año
     return Fecha(partes[0], partes[1], partes[2]);
+
 }
 
 

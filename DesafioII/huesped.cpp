@@ -10,6 +10,32 @@
 #include <sstream>
 using namespace std;
 
+// Variable estática privada al archivo para controlar el código de reservas
+static int contadorReservasGlobal = 0;
+
+// Función auxiliar privada para obtener el máximo código numérico de reserva existente
+static int obtenerUltimoCodigoReserva(Reservas** reservaciones, int& totalReservas) {
+    int maxCodigo = 0;
+    for (int i = 0; i < totalReservas; i++) {
+        string codigo = reservaciones[i]->getCodigoReserva(); // Ejemplo: "R5"
+        if (codigo.size() > 1 && codigo[0] == 'R') {
+            int num = stoi(codigo.substr(1));
+            if (num > maxCodigo) maxCodigo = num;
+        }
+    }
+    return maxCodigo;
+}
+
+// Función auxiliar privada para inicializar el contador global
+static void inicializarContadorReservasInterna(Reservas** reservaciones, int totalReservas) {
+    contadorReservasGlobal = obtenerUltimoCodigoReserva(reservaciones, totalReservas);
+}
+
+// Método público para inicializar el contador (llama a la función interna)
+void Huesped::inicializarContadorReservas(Reservas** reservaciones, int& totalReservas) {
+    inicializarContadorReservasInterna(reservaciones, totalReservas);
+}
+
 /**
  * @brief Constructor de la clase Huesped.
  *
@@ -35,12 +61,22 @@ Huesped::Huesped(const string& _cedula, const string& _clave, const string& _ant
  * Esta limpieza asegura que no haya fugas de memoria asociadas al arreglo propio del huésped.
  */
 Huesped::~Huesped() {
-    delete[] reservasHuesped;  // liberar solo el arreglo de punteros
-    liberarMemoria<Reservas*>(cantidadReservas);
-    reservasHuesped = nullptr;
-    mostrarUsoMemoria();
+    if (reservasHuesped != nullptr) {
+        for (int i = 0; i < cantidadReservas; i++){
+            reservasHuesped[i] = nullptr;
+        }
+    }
 }
 
+void Huesped::setReserva(int index, Reservas* reserva) {
+    if (index >= 0 && index < cantidadReservas) {
+        reservasHuesped[index] = reserva;
+    }
+}
+
+int Huesped::getCantidadReservas() const {
+    return cantidadReservas;
+}
 /**
  * @brief Obtiene la cédula del huésped.
  * @return cédula del huésped como string.
@@ -122,7 +158,6 @@ void Huesped::cargarHuespedes(Huesped**& huespedes, int& totalHuespedes){
         incrementarIteraciones();
     }
     archivo.close();
-
 }
 
 /**
@@ -267,8 +302,6 @@ void Huesped::anularReservacion(const string& _codigoReserva, Reservas**& reserv
     reservasHuesped[cantidadReservas] = nullptr;
 
     cout << "\nReserva " << _codigoReserva << " anulada correctamente\n";
-
-    mostrarUsoMemoria();
 }
 
 /**
@@ -317,8 +350,6 @@ void Huesped::liberarReservasHuesped(const string& _codigoReserva) {
     }
 
     codigosReservas = nuevoCodigoReservas;
-
-    mostrarUsoMemoria();
 }
 
 
@@ -358,11 +389,12 @@ void Huesped::reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamient
         int cantNoches;
 
         cout << "Ingrese la fecha de entrada (dd/mm/aaaa): ";
-        cin >> fechaStr;
+        cin.ignore(1000, '\n');
+        getline(cin, fechaStr);
         Fecha fechaEntrada = Fecha::fromString(fechaStr);
 
         if (!fechaEntrada.esValida()) {
-            cout << "Fecha invalida.\n Vuelva a intentarlo. /n";
+            cout << "Fecha invalida.\nVuelva a intentarlo. /n";
             return;
         }
 
@@ -370,7 +402,7 @@ void Huesped::reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamient
         cin >> cantNoches;
 
         cout << "\nIngrese el municipio destino: ";
-        cin.ignore();
+        cin.ignore(1000, '\n');
         getline(cin,municipio);
 
         // Filtro opcional
@@ -469,7 +501,7 @@ void Huesped::reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamient
             incrementarIteraciones();
             cout << "\n(Limite de 1000 caracteres)"
                     "\nIngrese anotaciones: " << endl;
-            cin.ignore();
+            cin.ignore(1000, '\n');
             getline(cin, notasHuesped);
 
             if (notasHuesped.size() > 1000) {
@@ -506,7 +538,8 @@ void Huesped::reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamient
         Alojamiento* alojamientoSeleccionado = alojamientos[opcion];
 
         // Generar codigo automatico de la reserva
-        string codigoNuevaReserva = "R" + to_string(totalReservas + 1);
+        contadorReservasGlobal ++;
+        string codigoNuevaReserva = "R" + to_string(contadorReservasGlobal);
 
         //datos para crear la nueva reserva
         string codigoAlojamiento = alojamientoSeleccionado->getCodigoAlojamiento();
@@ -569,7 +602,7 @@ void Huesped::reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamient
         //Ingreso por codigo
         string codigoAloj = "";
         cout << "\nIngrese codigo de alojamiento: ";
-        cin.ignore();
+        cin.ignore(1000, '\n');
         getline(cin, codigoAloj);
 
         //pedir fecha y noches
@@ -577,12 +610,11 @@ void Huesped::reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamient
         int cantNoches;
 
         cout << "\nIngrese la fecha de entrada (dd/mm/aaaa): ";
-        cin.ignore();
         getline(cin, fechaStr);
         Fecha fechaEntrada = Fecha::fromString(fechaStr);
 
         if (!fechaEntrada.esValida()) {
-            cout << "Fecha invalida.\n Vuelva a intentarlo. \n";
+            cout << "Fecha invalida.\nVuelva a intentarlo. \n";
             return;
         }
 
@@ -623,7 +655,7 @@ void Huesped::reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamient
         while (opcionNotas == 1 && !notasExitoso) {
             incrementarIteraciones();
             cout << "\n(Limite de 1000 caracteres)\nIngrese anotaciones: " << endl;
-            cin.ignore();
+            cin.ignore(1000, '\n');
             getline(cin, notasHuesped);
 
             if (notasHuesped.size() > 1000) {
@@ -659,7 +691,8 @@ void Huesped::reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamient
 
 
         // Generar codigo automatico de la reserva
-        string codigoNuevaReserva = "R" + to_string(totalReservas + 1);
+        contadorReservasGlobal ++;
+        string codigoNuevaReserva = "R" + to_string(contadorReservasGlobal);
 
         //datos para crear la nueva reserva
         string codigoAlojamiento = alojamientoSeleccionado->getCodigoAlojamiento();
@@ -715,7 +748,6 @@ void Huesped::reservarAlojamiento(Alojamiento** alojamientos,int totalAlojamient
 
         nuevaReserva->mostrarComprobante();
     }
-    mostrarUsoMemoria();
 }
 
 /**
@@ -765,6 +797,5 @@ void Huesped::eliminarReservaHistorico(const string& codigoReserva) {
             break;
         }
     }
-    mostrarUsoMemoria();
 }
 

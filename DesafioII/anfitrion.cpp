@@ -32,12 +32,12 @@ Anfitrion::Anfitrion(const string& _cedula, const string& _clave, const string& 
  * No elimina los objetos Alojamiento, ya que no son propiedad del anfitrion, solo estan referenciados.
  */
 Anfitrion::~Anfitrion() {
-    delete[] alojamientosAnfitrion;
-    liberarMemoria<Alojamiento*>(cantidadAlojamientos);
-    alojamientosAnfitrion = nullptr;
-    mostrarUsoMemoria();
+    if (alojamientosAnfitrion != nullptr) {
+        for (int i = 0; i < cantidadAlojamientos; i++){
+        alojamientosAnfitrion[i] = nullptr;
+        }
+    }
 }
-
 
 /**
  * @brief Obtiene la cédula del anfitrión.
@@ -121,7 +121,7 @@ void Anfitrion::asociarAlojamientos(Alojamiento** listaAlojamientos, int totalAl
 
      // Reserva memoria para alojamientos asociados (nota: la cantidad de alojamientos es numAlojamientos + 1)
     alojamientosAnfitrion = new Alojamiento*[numAlojamientos];
-    registrarMemoria<Alojamiento>(numAlojamientos);
+    registrarMemoria<Alojamiento*>(numAlojamientos);
     cantidadAlojamientos = 0;
 
     size_t start = 0;
@@ -193,7 +193,6 @@ void Anfitrion::mostrarReservasDeSusAlojamientos(Reservas** reservaciones, int t
             cout << "   No tiene reservas\n";
         }
     }
-    mostrarUsoMemoria();
 }
 
 /**
@@ -250,12 +249,19 @@ void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&rese
         }
     }
 
+    if (!huespedActualizado) {
+        cout << "Huesped asociado no encontrado.\n";
+        return;
+    }
+
     // Llama al método del huésped para liberar la reserva
     huespedActualizado->liberarReservasHuesped(_codigoReserva);
 
-    // Elimina la reserva del arreglo global y desplaza los elementos para llenar el hueco
+    //liberar la memoria de la reserva antes de eliminarla del arreglo
     delete reservas[indexReserva];
     liberarMemoria<Reservas>(1);
+
+    // Elimina la reserva del arreglo global y desplaza los elementos para llenar el hueco
     for (int i = indexReserva; i < totalReservas - 1; ++i) {
         incrementarIteraciones();
         reservas[i] = reservas[i + 1];
@@ -267,8 +273,6 @@ void Anfitrion::anularReservacion(const string& _codigoReserva, Reservas **&rese
     huespedActualizado->asociarReservas(reservas, totalReservas);
 
     cout << "Reserva " << _codigoReserva << " eliminada exitosamente.\n";
-
-    mostrarUsoMemoria();
 }
 
 /**

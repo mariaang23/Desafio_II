@@ -42,22 +42,19 @@ Reservas::Reservas(const string& _codigoReserva, const string& _fechaEntrada, in
  */
 Reservas::~Reservas() {
     if (fechasReservadas != nullptr) {
-        if (cantNoches > 0 && cantNoches <= 365) {
-            for (int i = 0; i < cantNoches; ++i) {
-                incrementarIteraciones();
-                delete fechasReservadas[i];
-                fechasReservadas[i] = nullptr;
-            }
+        for (int i = 0; i < cantNoches; ++i) {
+            incrementarIteraciones();
+            delete fechasReservadas[i];
+            liberarMemoria<Fecha>(1);
+            fechasReservadas[i] = nullptr;
         }
         delete[] fechasReservadas;
         liberarMemoria<Fecha*>(cantNoches);
         fechasReservadas = nullptr;
     }
-
-    alojamientoPtr = nullptr;  // Solo desvincular, no eliminar
-
-    mostrarUsoMemoria();
+    alojamientoPtr = nullptr;  // desvincular, no eliminar
 }
+
 
 /**
  * @brief Obtiene el código de la reserva.
@@ -159,12 +156,12 @@ void Reservas::setFechasReservadas(Fecha** nuevasFechas) {
         for (int i = 0; i < cantNoches; i++) {
             incrementarIteraciones();
             delete fechasReservadas[i];
+            liberarMemoria<Fecha>(1);
         }
         delete[] fechasReservadas;
+        liberarMemoria<Fecha*>(cantNoches);
     }
     fechasReservadas = nuevasFechas;
-
-    mostrarUsoMemoria();
 }
 
 /**
@@ -216,6 +213,7 @@ void Reservas::cargarReservas(Reservas**& reservaciones, int& totalReservas) {
 
     while (getline(archivo, linea)) total++;
     archivo.clear(); archivo.seekg(0);
+
 
     // Reservar memoria para el arreglo de punteros a Reservas
     reservaciones = new Reservas*[total];
@@ -280,7 +278,7 @@ void Reservas::asociarFechasReservadas() {
     // Convertir la fecha de entrada de string a objeto Fecha y crear arreglo dinamico para fechas reservadas
     Fecha inicio = Fecha::fromString(fechaEntrada);
     fechasReservadas = new Fecha*[cantNoches];
-    registrarMemoria<Fecha>(cantNoches);
+    registrarMemoria<Fecha*>(cantNoches);
 
      // Asignar cada fecha consecutiva sumando días a la fecha inicial
     for (int i = 0; i < cantNoches; i++) {
