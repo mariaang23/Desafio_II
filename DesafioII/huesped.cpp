@@ -68,15 +68,7 @@ Huesped::~Huesped() {
     }
 }
 
-void Huesped::setReserva(int index, Reservas* reserva) {
-    if (index >= 0 && index < cantidadReservas) {
-        reservasHuesped[index] = reserva;
-    }
-}
 
-int Huesped::getCantidadReservas() const {
-    return cantidadReservas;
-}
 /**
  * @brief Obtiene la cédula del huésped.
  * @return cédula del huésped como string.

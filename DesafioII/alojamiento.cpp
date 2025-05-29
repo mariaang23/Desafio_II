@@ -35,16 +35,6 @@ Alojamiento::Alojamiento(const string& _codigo, const string& _nombre, const str
       tipo(_tipo), direccion(_direccion), precio(_precioStr), amenidades(_amenidades) {}
 
 /**
- * @brief Destructor de la clase Alojamiento.
- *
- * Actualmente no realiza operaciones explicitas, ya que la clase no gestiona memoria dinamica internamente.
- * Se incluye como buena practica para facilitar futuras extensiones, depuracion y garantizar una destruccion segura.
- */
-Alojamiento::~Alojamiento() {
-}
-
-
-/**
  * @brief Retorna el código único del alojamiento.
  *
  * @return Referencia constante al string con el código del alojamiento.

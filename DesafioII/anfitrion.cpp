@@ -25,19 +25,6 @@ Anfitrion::Anfitrion(const string& _cedula, const string& _clave, const string& 
     : cedula(_cedula),clave(_clave), antiguedad(_antiguedad), puntuacion(_puntos), codigosAlojamientos(_codigosAlojamientos) {
 }
 
-/**
- * @brief Destructor de la clase Anfitrion.
- *
- * Libera la memoria dinamica asignada para el arreglo de punteros a alojamientos asociados.
- * No elimina los objetos Alojamiento, ya que no son propiedad del anfitrion, solo estan referenciados.
- */
-Anfitrion::~Anfitrion() {
-    if (alojamientosAnfitrion != nullptr) {
-        for (int i = 0; i < cantidadAlojamientos; i++){
-        alojamientosAnfitrion[i] = nullptr;
-        }
-    }
-}
 
 /**
  * @brief Obtiene la cédula del anfitrión.
